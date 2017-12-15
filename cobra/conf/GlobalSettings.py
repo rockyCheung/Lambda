@@ -8,8 +8,9 @@ by the  environment variable.
 ####################
 # CORE             #
 ####################
-ROOT_PATH = "/spark"
+ROOT_PATH = "/data"
 DEBUG = False
+LOG_FILE = "cobra.log"
 #检查点信息写入模式overwrite：覆盖 append：追加
 PARQUET_SAVE_MODE = "append"
 ######################

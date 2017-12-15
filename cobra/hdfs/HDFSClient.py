@@ -49,8 +49,13 @@ class HDFSClient:
             self.client.append(file,data)
         else:
             self.client.create(file,data)
+    def read(self,path,fileName):
+        if self.client.exists(path):
+            listDir = self.client.listdir(path=path)
+            print listDir
+
 ############################################################################
-# dfsClient = HDFSClient("192.168.1.171:50070",True,"root",20,2,5)
-# #dfsClient.mkdir("/spark/house")
+dfsClient = HDFSClient("192.168.1.171:50070",True,"root",20,2,5)
+#dfsClient.mkdir("/spark/house")
 # dfsClient.append("/spark","abcdata","WWWWWWWWWWWwwwsssssssss11111111111111")
-# print dfsClient.client.list_status("/data")
+dfsClient.read("/data",None)

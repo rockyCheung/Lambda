@@ -5,10 +5,13 @@ import sys
 import time
 from cobra.conf.GlobalSettings import *
 import sched
+import os
+
+log_file = open(LOG_FILE, "a")
+sys.stdout = log_file
 # 初始化sched模块的scheduler类
 # 第一个参数是一个可以返回时间戳的函数，第二个参数可以在定时未到达之前阻塞。
 schedule = sched.scheduler(time.time, time.sleep)
-
 #########################################################################################
 # inc 默认定时60秒
 #
@@ -31,7 +34,11 @@ if __name__=="__main__":
     sys.setdefaultencoding("utf8")
     startTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print "excute main", "the default encoding is ", sys.getdefaultencoding()," start time ",startTime
-    while True:
-        main(dbName="house_orignal", savePath="huouse_migrate",inc=SCH_INC)
-        endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        print "the task excute end!","end time ",endTime
+    try:
+        while True:
+            main(dbName="house_orignal", savePath="huouse_migrate",inc=SCH_INC)
+            endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            print "the task excute end!","end time ",endTime
+    finally:
+        log_file.close()
+        os.rename(LOG_FILE,LOG_FILE+"."+startTime)

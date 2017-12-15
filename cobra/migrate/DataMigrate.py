@@ -33,22 +33,25 @@ class DataMigrate:
         checkPoint = CheckPointParquet(appName="CheckPointSpark", masterName="local")
         for name in collectionNames:
             dataSet = db[name]
-            count=0
             checkString = ""
             positionDataFrame = checkPoint.queryCheckParquetMaxPos(dbName=dbName,collectionName=name)
             print "##############################################"
             positionDataFrame.show()
             print "##############################################"
             dataList = positionDataFrame.collect()
+            count = 0
+            skipPos = 0
             for pos in dataList:
-                count = pos.position
-            if count is None:
-                count = 0
-
+                skipPos = pos.position
+            if skipPos is None:
+                skipPos = 0
             print "##############################################"
             print "# dbName:", dbName, " collectionName:", name, " start position:", count
             print "##############################################"
-            for i in dataSet.find().skip(count):
+            if skipPos>=dataSet.count():
+                skipPos = dataSet.count()
+            dataSetResult = dataSet.find().skip(skipPos)
+            for i in dataSetResult:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
                 self.hdfsClient.append(workPath,name,tempStr)
                 count += 1
