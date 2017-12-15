@@ -49,7 +49,7 @@ class DataMigrate:
             print "# dbName:", dbName, " collectionName:", name, " start position:", count
             print "##############################################"
             if skipPos>=dataSet.count():
-                skipPos = dataSet.count()
+                skipPos = dataSet.count()-1
             dataSetResult = dataSet.find().skip(skipPos)
             for i in dataSetResult:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
