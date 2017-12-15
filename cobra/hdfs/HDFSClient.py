@@ -39,12 +39,11 @@ class HDFSClient:
     def append(self,path,fileName,data):
         file = ""
         if str(path).endswith("/"):
-            print "the path end with /"
+            # print "the path end with /"
             file = path+ str(fileName).lower()
         else:
             file = path+"/"+str(fileName).lower()
-
-        print "the file path is ",file," data:",data
+       # print "the file path is ",file," data:",data
         if self.client.exists(file):
             self.client.append(file,data)
         else:

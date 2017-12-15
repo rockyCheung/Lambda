@@ -45,18 +45,18 @@ class DataMigrate:
                 skipPos = pos.position
             if skipPos is None:
                 skipPos = 0
-            print "##############################################"
-            print "# dbName:", dbName, " collectionName:", name, " start position:", count
-            print "##############################################"
             if skipPos>=dataSet.count():
                 skipPos = dataSet.count()-1
+            print "##############################################"
+            print "# dbName:", dbName, " collectionName:", name, " start position:", skipPos," dataSet count:",dataSetResult.count(with_limit_and_skip=False)
+            print "##############################################"
             dataSetResult = dataSet.find().skip(skipPos)
+            tempStr = ""
             for i in dataSetResult:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
                 self.hdfsClient.append(workPath,name,tempStr)
                 count += 1
-                if count == dataSet.count():
-                    checkString = self.md5(tempStr)
+            checkString = self.md5(tempStr)
                 # print(str(i).replace('u\'','\'').decode("unicode-escape"))
             checkTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             ##################################################################
