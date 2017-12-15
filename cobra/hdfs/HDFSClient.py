@@ -48,13 +48,18 @@ class HDFSClient:
             self.client.append(file,data)
         else:
             self.client.create(file,data)
-    def read(self,path,fileName):
-        if self.client.exists(path):
-            listDir = self.client.listdir(path=path)
-            print listDir
 
+    def readFile(self,filePath):
+        return self.client.open(filePath)
+
+    def getFileList(self,path):
+        if self.client.exists(path):
+            return  self.client.listdir(path=path)
+
+    def deleteFile(self,filePath):
+        return self.client.delete(path=filePath)
 ############################################################################
 dfsClient = HDFSClient("192.168.1.171:50070",True,"root",20,2,5)
 #dfsClient.mkdir("/spark/house")
 # dfsClient.append("/spark","abcdata","WWWWWWWWWWWwwwsssssssss11111111111111")
-dfsClient.read("/data",None)
+dfsClient.readFile("/data/huouse_migrate/abc_ori")
