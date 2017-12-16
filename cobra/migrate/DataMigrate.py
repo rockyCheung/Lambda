@@ -56,6 +56,9 @@ class DataMigrate:
             for i in datacursor:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
                 if tempStr != "":
+                    print "#############################################################################################################################################"
+                    print "#","workPath:",workPath,"collectionNames:",collectionNames," append str:",tempStr
+                    print "#############################################################################################################################################"
                     self.hdfsClient.append(workPath,name,tempStr)
                     count += 1
             datacursor.close()
