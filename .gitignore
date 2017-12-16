@@ -1,3 +1,4 @@
 .idea
 writePoint.parquet
-robra.log*
+robra.log.*
+robra.log
