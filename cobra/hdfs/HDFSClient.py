@@ -59,7 +59,7 @@ class HDFSClient:
     def deleteFile(self,filePath):
         return self.client.delete(path=filePath)
 ############################################################################
-dfsClient = HDFSClient("192.168.1.171:50070",True,"root",20,2,5)
+# dfsClient = HDFSClient("192.168.1.171:50070",True,"root",20,2,5)
 #dfsClient.mkdir("/spark/house")
 # dfsClient.append("/spark","abcdata","WWWWWWWWWWWwwwsssssssss11111111111111")
-dfsClient.readFile("/data/huouse_migrate/abc_ori")
+# dfsClient.readFile("/data/huouse_migrate/abc_ori")

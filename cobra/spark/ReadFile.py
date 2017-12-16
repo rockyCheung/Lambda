@@ -17,6 +17,7 @@ class ReadFile:
         # textFile.collect()
         print length
         # print "textRdd:",textRdd
-
-readFile = ReadFile(appName="spark",masterName="local")
-readFile.readFileForDataFrame(path=HDFS_CONFIG["fs_url"]+"/spark/huouse_migrate/fangtianxia_beijing")
+#######################################################################################################################################
+# readFile = ReadFile(appName="spark",masterName="local")
+# readFile.readFileForDataFrame(path=HDFS_CONFIG["fs_url"]+"/spark/huouse_migrate/fangtianxia_beijing")
+#######################################################################################################################################
