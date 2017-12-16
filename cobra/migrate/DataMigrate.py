@@ -43,7 +43,7 @@ class DataMigrate:
             skipPos = 0
             for pos in dataList:
                 skipPos = pos.position
-            if skipPos is None:
+            if skipPos is None or str(skipPos).isdigit() != True:
                 skipPos = 0
             if skipPos>=dataSet.count():
                 skipPos = dataSet.count()-1

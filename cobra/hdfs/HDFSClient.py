@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import pyhdfs
+import time
 
 class HDFSClient:
     # ###########################################################
@@ -44,8 +45,13 @@ class HDFSClient:
         else:
             file = path+"/"+str(fileName).lower()
        # print "the file path is ",file," data:",data
+        self.client.set_replication(file, replication=1)
         if self.client.exists(file):
-            self.client.append(file,data,buffersize=1024)
+            try:
+                fs = self.client.append(file,data,buffersize=1024)
+            except Exception:
+                print Exception,"sleep 60 second"
+                time.sleep(60)
         else:
             self.client.create(file,data)
 
