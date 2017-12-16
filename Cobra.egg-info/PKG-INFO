@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: Cobra
+Version: 1.0.0
+Summary: The Cobra project is mainly used for batch processing of data in Mongo and batch import of HDFS
+Home-page: https://github.com/rockyCheung/Cobra.git
+Author: Rocky
+Author-email: 274935730@qq.com
+License: PSF
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent

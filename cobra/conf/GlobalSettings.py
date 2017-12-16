@@ -29,7 +29,9 @@ HDFS_CONFIG = {
     "user_name":"root",
     "timeout":20,
     "max_tries":2,
-    "retry_delay":5
+    "retry_delay":5,
+    "fs_url":"hdfs://192.168.1.171:9000"
+
 }
 ######################
 # schedule start time #

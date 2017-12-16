@@ -55,8 +55,9 @@ class DataMigrate:
             tempStr = ""
             for i in datacursor:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
-                self.hdfsClient.append(workPath,name,tempStr)
-                count += 1
+                if tempStr != "":
+                    self.hdfsClient.append(workPath,name,tempStr)
+                    count += 1
             datacursor.close()
             checkString = self.md5(tempStr)
                 # print(str(i).replace('u\'','\'').decode("unicode-escape"))
