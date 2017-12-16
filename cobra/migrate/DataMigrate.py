@@ -47,7 +47,7 @@ class DataMigrate:
                 skipPos = 0
             if skipPos>=dataSet.count():
                 skipPos = dataSet.count()-1
-            datacursor = dataSet.find(timeout=False).skip(skipPos)
+            datacursor = dataSet.find().skip(skipPos)
             datacursor.add_option(16)#DBQuery.Option.noTimeout
             print "#############################################################################################################################################"
             print "# dbName:", dbName, " collectionName:", name, " start position:", skipPos," dataSet count:",cursor.count(with_limit_and_skip=False),"#"
