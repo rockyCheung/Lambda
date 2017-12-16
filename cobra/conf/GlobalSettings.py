@@ -36,4 +36,4 @@ HDFS_CONFIG = {
 ######################
 # schedule start time #
 ######################
-SCH_INC = 600
+SCH_INC = 60

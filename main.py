@@ -35,10 +35,10 @@ if __name__=="__main__":
     startTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print "excute main", "the default encoding is ", sys.getdefaultencoding()," start time ",startTime
     try:
-        while True:
-            main(dbName="house_orignal", savePath="huouse_migrate",inc=SCH_INC)
-            endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            print "the task excute end!","end time ",endTime
+        # while True:
+        main(dbName="house_orignal", savePath="huouse_migrate",inc=SCH_INC)
+        endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        print "the task excute end!","end time ",endTime
     finally:
         log_file.close()
         os.rename(LOG_FILE,LOG_FILE+"."+startTime)
