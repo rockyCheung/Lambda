@@ -42,7 +42,7 @@ if __name__=="__main__":
             if times==0:
                 main(dbName="house_orignal", savePath="huouse_migrate", inc=0)
             elif times==EXCUTE_TIMES:
-                time.sleep(SLEEP_TIME)  
+                time.sleep(SLEEP_TIME)
                 times = 0
             else:
                 main(dbName="house_orignal", savePath="huouse_migrate", inc=SCH_INC)
