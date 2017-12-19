@@ -8,6 +8,8 @@ from cobra.hdfs.HDFSClient import HDFSClient
 import time
 import hashlib
 from cobra.spark.CheckPointParquet import CheckPointParquet
+import json
+import simplejson
 class DataMigrate:
     # 初始化HDFS客户端、初始化Mongo客户端
     def __init__(self):
@@ -32,6 +34,9 @@ class DataMigrate:
         collectionNames = db.collection_names()
         checkPoint = CheckPointParquet(appName="CheckPointSpark", masterName="local")
         for name in collectionNames:
+            if name == "error_records":
+                continue
+
             dataSet = db[name]
             checkString = ""
             positionDataFrame = checkPoint.queryCheckParquetMaxPos(dbName=dbName,collectionName=name)
@@ -53,13 +58,23 @@ class DataMigrate:
             print "# dbName:", dbName, " collectionName:", name, " start position:", skipPos," dataSet count:",datacursor.count(with_limit_and_skip=False),"#"
             print "#############################################################################################################################################"
             tempStr = ""
+            errorTimes = 0
             for i in datacursor:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
                 if tempStr != "":
                     print "#############################################################################################################################################"
                     print "#","workPath:",workPath,"collectionNames:",name," append str:",tempStr
                     print "#############################################################################################################################################"
-                    self.hdfsClient.append(workPath,name,tempStr)
+                    try:
+                        self.hdfsClient.append(workPath,name,tempStr)
+                    except Exception:
+                        print Exception, "sleep 60 second"
+                        time.sleep(60)
+                        errorTimes += 1
+                        tempDict = eval(tempStr)
+                        tempDict['collectionNames'] = name
+                        tempDict['dbName'] = dbName
+                        db.error_records.insert(tempDict)
                     count += 1
             datacursor.close()
             checkString = self.md5(tempStr)
@@ -72,4 +87,17 @@ class DataMigrate:
                 checkPointData = [(dbName,name,checkString,count,checkTime)]
                 checkPoint.writeCheckParquet(checkPointData, PARQUET_SAVE_MODE)
             checkPoint.queryCheckParquet().show()
-            print "the collection ",name," ,have ",count," lines data"
+            print "the collection ",name," ,have ",count," lines data"," errorTimes:",errorTimes
+###################################################################################################
+# tempStr  = "{'name' : 'jim', 'sex' : 'male', 'age': 18}"
+# #tempStr = json.loads(tempStr)
+# dic = eval(tempStr)
+# # print eval(tempStr)
+# # js = json.loads(eval(tempStr))
+# # tempStr.append({"collectionNames":"n","dbName":"d"})
+# dic['collectionNames'] = 'sss'
+# dic['dbName'] = 'sssddaa'
+# mongoClient = MongodbClient(ip=MONGODB_CONFIG["ip"],port=MONGODB_CONFIG["port"])
+# db = mongoClient.getConnection(dataBaseName='house_orignal')
+# db.error_records.insert(dic)
+# print dic

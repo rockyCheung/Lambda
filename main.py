@@ -45,7 +45,7 @@ if __name__=="__main__":
                 time.sleep(SLEEP_TIME)
                 times = 0
             else:
-                main(dbName="house_orignal", savePath="huouse_migrate", inc=SCH_INC)
+                main(dbName="judicial_orignal", savePath="judicial_migrate", inc=SCH_INC)
             endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print "this task end time:",endTime," times:",times
             times +=1

@@ -47,11 +47,7 @@ class HDFSClient:
        # print "the file path is ",file," data:",data
         self.client.set_replication(file, replication=1)
         if self.client.exists(file):
-            try:
-                fs = self.client.append(file,data,buffersize=1024)
-            except Exception:
-                print Exception,"sleep 60 second"
-                time.sleep(60)
+            self.client.append(file,data,buffersize=1024)
         else:
             self.client.create(file,data)
 

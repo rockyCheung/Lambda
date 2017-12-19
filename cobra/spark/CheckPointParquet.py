@@ -1,10 +1,12 @@
 # -*- coding:utf-8 -*-
 
 from pyspark.sql import SparkSession
+from cobra.spark.SparkConfigSingleton import *
 
 class CheckPointParquet:
     def __init__(self,appName,masterName):
-        self.spark  = SparkSession.builder.appName(appName).master(masterName).getOrCreate()
+        self.config = SparkConfigSingleton(appName, masterName)
+        self.spark  = SparkSession.builder.config(self.config.getSparkConf()).getOrCreate()
     def writeCheckParquet(self,checkData,saveMode):
         checkDataFrame = self.spark.createDataFrame(checkData,["dbName","collectionName","lastDataHash","position","time"])
         checkDataFrame.write.save("writePoint.parquet", mode=saveMode)
