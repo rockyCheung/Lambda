@@ -14,6 +14,7 @@ class Singleton(object):
 class SparkConfigSingleton(Singleton):
 
     def __init__(self,appName,masterName):
-        self.conf = SparkConf().setAppName(appName).setMaster(masterName)
+        self.conf = SparkConf()
+        self.conf.setAppName(appName).setMaster(masterName)
     def getSparkConf(self):
         return self.conf

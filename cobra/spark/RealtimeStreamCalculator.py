@@ -78,4 +78,5 @@ class RealtimeStreamCalculator:
 # employee = parts.map(lambda p: Row(price=p[0], salary=int(p[1])))
 # print parts.collect()
 # spark.createDataFrame(parts).show()
+# dd = RealtimeStreamCalculator("test","local")
 #######################################################################################################################################
