@@ -11,7 +11,7 @@ try:
     os.mknod(LOG_FILE)
 except Exception:
     print "creat file failed.",Exception
-    
+
 log_file = open(LOG_FILE, "a")
 sys.stdout = log_file
 # 初始化sched模块的scheduler类
@@ -54,6 +54,8 @@ if __name__=="__main__":
             endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print "this task end time:",endTime," times:",times
             times +=1
+    except Exception:
+        print Exception.message
     finally:
         log_file.close()
-        os.rename(LOG_FILE,LOG_FILE+"."+time.localtime())
+        os.rename(LOG_FILE,LOG_FILE+"."+str(time.localtime()))

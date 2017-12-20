@@ -22,15 +22,16 @@ class RealtimeStreamCalculator:
         # print textRdd.collect()
         # print str(parts).replace('u\'','\'').decode("unicode-escape")
         return textRdd
-        # print "textRdd:",textRdd
+
     def readStream(self,path):
         dStream = self.ssc.textFileStream(directory=path)
         transFormerString = dStream.flatMap(lambda s:s.split(","))
-
+        print transFormerString
+        print "transFormerString:",dStream.pprint(num=10)
         # wordCounts = transFormerString.reduceByKey()
         checkTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
-        self.process(transFormerString)
+        # self.process(transFormerString)
         # print "@",transFormerString
         self.ssc.start()
         self.ssc.awaitTermination()
@@ -63,7 +64,7 @@ class RealtimeStreamCalculator:
             pass
 
 #######################################################################################################################################
-# readFile = RealtimeStreamCalculator(appName="spark",masterName="local")
+# readFile = RealtimeStreamCalculator(appName="spark",masterName="local[2]")
 
 # 初始化SparkSession
 # # spark = SparkSession \
@@ -71,7 +72,7 @@ class RealtimeStreamCalculator:
 #         .appName("RDD_and_DataFrame") \
 #         .config("spark.some.config.option", "some-value") \
 #         .getOrCreate()
-# fsUrl = HDFS_CONFIG["fs_url"]+"/spark/huouse_migrate/fangtianxia_beijing"
+# fsUrl = HDFS_CONFIG["fs_url"]+"/data/judicial_migrate"
 # textRdd = readFile.readFileForRDD(path=fsUrl)
 # parts = textRdd.map(lambda l: l.split(","))
 # readFile.readStream(path=fsUrl)

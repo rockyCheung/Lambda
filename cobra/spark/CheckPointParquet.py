@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from pyspark.sql import SparkSession
-from cobra.spark.SparkConfigSingleton import *
+# from cobra.spark.SparkConfigSingleton import *
 
 class CheckPointParquet:
     def __init__(self,appName,masterName):

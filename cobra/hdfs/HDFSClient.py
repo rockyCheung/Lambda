@@ -51,7 +51,18 @@ class HDFSClient:
         else:
             self.client.create(file,data)
 
-    def readFile(self,filePath):
+    """
+    Return a file-like object for reading the given HDFS path.
+
+            :param offset: The starting byte position.
+            :type offset: long
+            :param length: The number of bytes to be processed.
+            :type length: long
+            :param buffersize: The size of the buffer used in transferring data.
+            :type buffersize: int
+            :rtype: file-like object
+    """
+    def readFile(self,filePath, **kwargs):
         return self.client.open(filePath)
 
     def getFileList(self,path):
@@ -64,4 +75,8 @@ class HDFSClient:
 # dfsClient = HDFSClient("192.168.1.171:50070",True,"root",20,2,5)
 # # dfsClient.mkdir("/spark/house")
 # dfsClient.append("/data/huouse_migrate","fangtianxia_beijing"," {'total_price': '1650', 'facility': '简', 'url': 'http://www.abc001.com/displaySale.do?page=1', 'region': '崇文', 'floor': '5/28', 'release time': '2017-11-29', 'telephone_num': '13911387759', 'area': '230', 'decoration_situation': '中档', 'create_time': datetime.datetime(2017, 11, 29, 5, 31, 5, 608000), 'longitude': '116.416913', 'huxing': '三居', 'latitude': '  39.896528', 'house_type': '民宅', 'contact_person': '曹女士', '_id': 'fae820c236177ce36396e475c22e8d78', 'location': '新世界太华公寓B座517'}")
-# # dfsClient.readFile("/data/huouse_migrate/abc_ori")
+# fs = dfsClient.readFile("/spark/huouse_migrate/abc_ori",buffersize=1024)
+# for i in fs:
+#     print "#########################################"
+#     print i
+#     print "#########################################"
