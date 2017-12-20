@@ -7,6 +7,7 @@ from cobra.conf.GlobalSettings import *
 import sched
 import os
 
+os.mknod(LOG_FILE)
 log_file = open(LOG_FILE, "a")
 sys.stdout = log_file
 # 初始化sched模块的scheduler类
@@ -40,15 +41,15 @@ if __name__=="__main__":
             taskStartTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print "this task start time:", taskStartTime
             if times==0:
-                main(dbName="house_orignal", savePath="huouse_migrate", inc=0)
+                main(dbName=MONGO_DBNAME, savePath=HDFS_PATH, inc=0)
             elif times==EXCUTE_TIMES:
                 time.sleep(SLEEP_TIME)
                 times = 0
             else:
-                main(dbName="judicial_orignal", savePath="judicial_migrate", inc=SCH_INC)
+                main(dbName=MONGO_DBNAME, savePath=HDFS_PATH, inc=SCH_INC)
             endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print "this task end time:",endTime," times:",times
             times +=1
     finally:
         log_file.close()
-        os.rename(LOG_FILE,LOG_FILE+"."+startTime)
+        os.rename(LOG_FILE,LOG_FILE+"."+time.localtime())

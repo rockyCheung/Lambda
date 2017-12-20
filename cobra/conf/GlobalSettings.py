@@ -46,3 +46,9 @@ SLEEP_TIME = 36000
 # spark stream 分批时间间隔，单位秒
 ##################################################
 BATH_DURATION = 10
+
+##################################################
+# migrate db name and migrate path in hdfs
+##################################################
+MONGO_DBNAME = "judicial_orignal"
+HDFS_PATH = "judicial_migrate"
