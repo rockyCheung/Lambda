@@ -7,7 +7,11 @@ from cobra.conf.GlobalSettings import *
 import sched
 import os
 
-os.mknod(LOG_FILE)
+try:
+    os.mknod(LOG_FILE)
+except Exception:
+    print "creat file failed.",Exception
+    
 log_file = open(LOG_FILE, "a")
 sys.stdout = log_file
 # 初始化sched模块的scheduler类
