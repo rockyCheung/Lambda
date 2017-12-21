@@ -6,6 +6,7 @@ import time
 from cobra.conf.GlobalSettings import *
 import sched
 import os
+import traceback
 
 try:
     os.mknod(LOG_FILE)
@@ -55,7 +56,7 @@ if __name__=="__main__":
             print "this task end time:",endTime," times:",times
             times +=1
     except Exception:
-        print Exception.message
+        traceback.print_exc(file=ERROR_LOG)
     finally:
         log_file.close()
         timestemp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime())

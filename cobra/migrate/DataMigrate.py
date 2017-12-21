@@ -8,8 +8,8 @@ from cobra.hdfs.HDFSClient import HDFSClient
 import time
 import hashlib
 from cobra.spark.CheckPointParquet import CheckPointParquet
-import json
-import simplejson
+import traceback
+
 class DataMigrate:
     # 初始化HDFS客户端、初始化Mongo客户端
     def __init__(self):
@@ -68,6 +68,7 @@ class DataMigrate:
                     try:
                         self.hdfsClient.append(workPath,name,tempStr)
                     except Exception:
+                        traceback.print_exc(file=ERROR_LOG)
                         print Exception, "sleep 60 second"
                         time.sleep(60)
                         errorTimes += 1
