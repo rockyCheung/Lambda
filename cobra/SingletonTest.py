@@ -16,9 +16,9 @@ class MyClass(Singleton):
         self.conf = SparkConf().setAppName("test").setMaster("local")
     def p(self):
         print self.name
-
-one = MyClass("rocky")
-two = MyClass("rocky1")
-print one == two,one is two
-one.p()
-two.p()
+#
+# one = MyClass("rocky")
+# two = MyClass("rocky1")
+# print one == two,one is two
+# one.p()
+# two.p()

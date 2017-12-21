@@ -58,4 +58,5 @@ if __name__=="__main__":
         print Exception.message
     finally:
         log_file.close()
-        os.rename(LOG_FILE,LOG_FILE+"."+str(time.localtime()))
+        timestemp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime())
+        os.rename(LOG_FILE,LOG_FILE+"."+timestemp)
