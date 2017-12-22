@@ -69,15 +69,18 @@ class DataMigrate:
                     self.logger.info( "#############################################################################################################################################")
                     try:
                         self.hdfsClient.append(workPath,name,tempStr)
-                    except Exception:
-                        traceback.print_exc(file=open(ERROR_LOG, 'w+'))
-                        print Exception, "sleep 60 second"
-                        time.sleep(60)
-                        errorTimes += 1
-                        tempDict = eval(tempStr)
-                        tempDict['collectionNames'] = name
-                        tempDict['dbName'] = dbName
-                        db.error_records.insert(tempDict)
+                    except Exception,e:
+                        try:
+                            traceback.print_exc(file=open(ERROR_LOG, 'w+'))
+                            self.logger.info("sleep 60 second")
+                            time.sleep(60)
+                            errorTimes += 1
+                            tempDict = eval(tempStr)
+                            tempDict['collectionNames'] = name
+                            tempDict['dbName'] = dbName
+                            db.error_records.insert(tempDict)
+                        except Exception, e:
+                            self.logger.error(tempStr)
                     count += 1
             datacursor.close()
             checkString = self.md5(tempStr)
