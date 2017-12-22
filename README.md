@@ -3,38 +3,62 @@ Cobra是一个大数据实时处理，计算的项目。
 
 ## 主要的功能模块：
 
-   ### 1、批量数据迁移
+   * 1、批量数据迁移
    
-   ### 2、实时数据处理、运算
+   * 2、实时数据处理、运算
    
        目前支持的迁移操作是从mongo迁移到HDFS。
    
 ## 项目结构：
 
     cobra.
+    
       conf.
+      
         GlobalSettings.py
+        
       db.
+      
         MongodbClient.py
+        
       hdfs.
+      
         HDFSClient.py
+        
       kafka.
+      
         Consumer.py
+        
         KFBase.py
+        
         Producer.py
+        
       log.
+      
         Logger.py
+        
       migrate.
+      
         DataMigrate.py
+        
       spark.
+      
         CheckPointParquet.py
+        
         RealtimeStreamCalculator.py
+        
         SparkConfigSingleton.py
+        
     main.py
+    
     setup.py
+    
     requirement.rst	
+    
     writePoint.parquet
+    
     Cobra.egg-info
+    
     dist
     
 ## 用到主要技术：
