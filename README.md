@@ -4,6 +4,7 @@ Cobra是一个大数据实时处理，计算的项目。
 ## 主要的功能模块：
 
    ### 1、批量数据迁移
+   
    ### 2、实时数据处理、运算
    
        目前支持的迁移操作是从mongo迁移到HDFS。
@@ -51,28 +52,43 @@ Cobra是一个大数据实时处理，计算的项目。
     1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
     
     from cobra.conf.GlobalSettings import *
+    
     #获取zookeeper 集群地址
+    
     para = KAFKA_ZOO_CONFIG['hosts']
     
     2、Logger为日志类
     
     from cobra.log.Logger import Logger
+    
     logger = Logger().getLogger('DataMigrate')
+    
     #%s为格式化占位符
+    
     logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
     
     3、MongodbClient为Mongo客户端
     
     client = MongodbClient('192.168.1.178',27017)
+    
     #house_orignal数据库名称
+    
     db = client.getConnection('house_orignal')
+    
     #获取数据库中所有collection名称
+    
     collectionNames  = db.collection_names()
+    
     #获取名称为ABC_sale的collection的数据集
+    
     dataSet = db.ABC_sale
+    
     #获取游标
+    
     cursor1 = dataSet.find().skip(1)
+    
     #设置游标的超时时间为永久
+    
     cursor1.add_option(16)
     
     
