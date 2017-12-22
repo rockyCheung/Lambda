@@ -62,22 +62,3 @@ class RealtimeStreamCalculator:
             wordCountsDataFrame.show()
         except:
             pass
-
-#######################################################################################################################################
-# readFile = RealtimeStreamCalculator(appName="spark",masterName="local[2]")
-
-# 初始化SparkSession
-# # spark = SparkSession \
-#         .builder \
-#         .appName("RDD_and_DataFrame") \
-#         .config("spark.some.config.option", "some-value") \
-#         .getOrCreate()
-# fsUrl = HDFS_CONFIG["fs_url"]+"/data/judicial_migrate"
-# textRdd = readFile.readFileForRDD(path=fsUrl)
-# parts = textRdd.map(lambda l: l.split(","))
-# readFile.readStream(path=fsUrl)
-# employee = parts.map(lambda p: Row(price=p[0], salary=int(p[1])))
-# print parts.collect()
-# spark.createDataFrame(parts).show()
-# dd = RealtimeStreamCalculator("test","local")
-#######################################################################################################################################

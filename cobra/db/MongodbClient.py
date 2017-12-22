@@ -13,17 +13,3 @@ class MongodbClient:
     ############################################
     def getConnection(self,dataBaseName):
         return self.client[dataBaseName]
-
-# client = MongodbClient('192.168.1.178',27017)
-# # # conn1 = client.getClient()
-# db = client.getConnection('house_orignal')
-# # collectionNames  = db.collection_names()
-# # for name in collectionNames:
-# #     print name
-# dataSet = db.ABC_sale
-# cursor1 = dataSet.find().skip(1)
-# cursor1.add_option(16)
-# for i in cursor1:
-#     print(str(i).replace('u\'','\'').decode("unicode-escape"))
-#
-# cursor1.close()

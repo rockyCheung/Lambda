@@ -65,7 +65,7 @@ class DataMigrate:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
                 if tempStr != "":
                     self.logger.info( "#############################################################################################################################################")
-                    self.logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
+                    self.logger.info( "#workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
                     self.logger.info( "#############################################################################################################################################")
                     try:
                         self.hdfsClient.append(workPath,name,tempStr)
@@ -92,15 +92,3 @@ class DataMigrate:
             checkPoint.queryCheckParquet().show()
             self.logger.info( "the collection %s ,have %s  lines data,errorTimes: %s",name,count,errorTimes)
 ###################################################################################################
-# tempStr  = "{'name' : 'jim', 'sex' : 'male', 'age': 18}"
-# #tempStr = json.loads(tempStr)
-# dic = eval(tempStr)
-# # print eval(tempStr)
-# # js = json.loads(eval(tempStr))
-# # tempStr.append({"collectionNames":"n","dbName":"d"})
-# dic['collectionNames'] = 'sss'
-# dic['dbName'] = 'sssddaa'
-# mongoClient = MongodbClient(ip=MONGODB_CONFIG["ip"],port=MONGODB_CONFIG["port"])
-# db = mongoClient.getConnection(dataBaseName='house_orignal')
-# db.error_records.insert(dic)
-# print dic

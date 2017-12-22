@@ -23,11 +23,3 @@ class Logger:
             return logging.DEBUG
         else:
             return logging.INFO
-
-# log = Logger().getLogger(loggerName='logtest')
-# log.info("sdsdsdsdsddsds")
-# sss = lambda LOGGER_LEVEL:(logging.DEBUG if LOGGER_LEVEL=="DEBUG" else logging.INFO)
-# print sss
-# make a copy of original stdout route
-# stdout_backup = sys.stdout
-# define the log file that receives your log info

@@ -16,15 +16,3 @@ class Producer(Base):
         topic = self.getTopics(topicName=topicName)
         with topic.get_sync_producer() as producer:
             producer.produce(message)
-
-#############################################################################
-# client = Producer()
-# request = {}
-# request["name"] = "RockyCheung"
-# request["sex"] = "man"
-# request["age"] = 25
-# request["marry"] = 'Yes'
-# msg = json.dumps(request)
-# client.sendMsg(topicName='topic_test_1',message=msg)
-# producer_logger.info("{} has been sent successfully~".format(msg))
-#############################################################################
