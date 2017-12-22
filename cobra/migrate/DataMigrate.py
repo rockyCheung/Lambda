@@ -70,7 +70,7 @@ class DataMigrate:
                     try:
                         self.hdfsClient.append(workPath,name,tempStr)
                     except Exception:
-                        traceback.print_exc(file=ERROR_LOG)
+                        traceback.print_exc(file=open(ERROR_LOG, 'w+'))
                         print Exception, "sleep 60 second"
                         time.sleep(60)
                         errorTimes += 1
