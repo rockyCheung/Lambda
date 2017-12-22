@@ -9,8 +9,10 @@ by the  environment variable.
 # CORE             #
 ####################
 ROOT_PATH = "/data"
-DEBUG = False
+#LOGGER_LEVEL =DEBUG 标识为debug，LOGGER_LEVEL =INFO 标识为info
+LOGGER_LEVEL = "DEBUG"
 LOG_FILE = "cobra.log"
+LOG_STD_FILE = "cobra_std.log"
 ERROR_LOG = "cobra_error.log"
 #检查点信息写入模式overwrite：覆盖 append：追加
 PARQUET_SAVE_MODE = "append"

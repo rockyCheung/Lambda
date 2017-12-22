@@ -9,6 +9,7 @@ import time
 import hashlib
 from cobra.spark.CheckPointParquet import CheckPointParquet
 import traceback
+from cobra.log.Logger import Logger
 
 class DataMigrate:
     # 初始化HDFS客户端、初始化Mongo客户端
@@ -20,6 +21,7 @@ class DataMigrate:
                                      maxTries=HDFS_CONFIG["max_tries"],\
                                      retryDelay=HDFS_CONFIG["retry_delay"])
         self.mongoClient = MongodbClient(ip=MONGODB_CONFIG["ip"],port=MONGODB_CONFIG["port"])
+        self.logger = Logger().getLogger('DataMigrate')
     # 计算md5 hex字符串
     def md5(self,src):
         hashStr = hashlib.md5()
@@ -40,9 +42,9 @@ class DataMigrate:
             dataSet = db[name]
             checkString = ""
             positionDataFrame = checkPoint.queryCheckParquetMaxPos(dbName=dbName,collectionName=name)
-            print "##############################################"
+            self.logger.info( "##############################################")
             positionDataFrame.show()
-            print "##############################################"
+            self.logger.info("##############################################")
             dataList = positionDataFrame.collect()
             count = 0
             skipPos = 0
@@ -54,17 +56,17 @@ class DataMigrate:
                 skipPos = dataSet.count()-1
             datacursor = dataSet.find().skip(skipPos)
             datacursor.add_option(16)#DBQuery.Option.noTimeout
-            print "#############################################################################################################################################"
-            print "# dbName:", dbName, " collectionName:", name, " start position:", skipPos," dataSet count:",datacursor.count(with_limit_and_skip=False),"#"
-            print "#############################################################################################################################################"
+            self.logger.info( "#############################################################################################################################################")
+            self.logger.info( "# dbName: %s ,collectionName: %s,start position: %s,dataSet count: %s #",dbName,name,skipPos,datacursor.count(with_limit_and_skip=False))
+            self.logger.info( "#############################################################################################################################################")
             tempStr = ""
             errorTimes = 0
             for i in datacursor:
                 tempStr = str(i).replace('u\'','\'').decode("unicode-escape")
                 if tempStr != "":
-                    print "#############################################################################################################################################"
-                    print "#","workPath:",workPath,"collectionNames:",name," append str:",tempStr
-                    print "#############################################################################################################################################"
+                    self.logger.info( "#############################################################################################################################################")
+                    self.logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
+                    self.logger.info( "#############################################################################################################################################")
                     try:
                         self.hdfsClient.append(workPath,name,tempStr)
                     except Exception:
@@ -88,7 +90,7 @@ class DataMigrate:
                 checkPointData = [(dbName,name,checkString,count,checkTime)]
                 checkPoint.writeCheckParquet(checkPointData, PARQUET_SAVE_MODE)
             checkPoint.queryCheckParquet().show()
-            print "the collection ",name," ,have ",count," lines data"," errorTimes:",errorTimes
+            self.logger.info( "the collection %s ,have %s  lines data,errorTimes: %s",name,count,errorTimes)
 ###################################################################################################
 # tempStr  = "{'name' : 'jim', 'sex' : 'male', 'age': 18}"
 # #tempStr = json.loads(tempStr)

@@ -1,14 +1,11 @@
 # coding:utf-8
 
-from pykafka.client import KafkaClient
-import logging
-import json
-from cobra.conf.GlobalSettings import *
-from cobra.kafka.Base import Base
-logging.basicConfig(level = logging.INFO)
 
-producer_logger = logging.getLogger('producer')
-logging.basicConfig(level = logging.DEBUG)
+from cobra.kafka.KFBase import Base
+
+"""
+# kafka producer
+"""
 
 class Producer(Base):
 

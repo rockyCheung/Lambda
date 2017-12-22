@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import pyhdfs
 import time
-
+from cobra.log.Logger import Logger
 class HDFSClient:
     # ###########################################################
     # hdfs地址ip:port，randomize_hosts选取DataNode的策略，
@@ -24,15 +24,16 @@ class HDFSClient:
                                         retry_delay=self.retry_delay,
                                         requests_session=None,
                                         requests_kwargs=None)
+        self.logger = Logger().getLogger('HDFSClient')
     ###############################
     # creat dir
     ###############################
     def mkdir(self,dirName):
         if self.client.exists(dirName)==True:
-            print "the dirName is exist"
+            self.logger.debug("the dirName is exist")
             return self.client.list_status(dirName)
         else:
-            print "the dirName is not exist and will be created"
+            self.logger.debug( "the dirName is not exist and will be created")
             return self.client.mkdirs(dirName)
     #############################################
     # write data in file,if file not exist ,creat

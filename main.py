@@ -7,14 +7,16 @@ from cobra.conf.GlobalSettings import *
 import sched
 import os
 import traceback
+from cobra.log.Logger import Logger
 
 try:
-    os.mknod(LOG_FILE)
+    os.mknod(LOG_STD_FILE)
 except Exception:
     print "creat file failed.",Exception
 
-log_file = open(LOG_FILE, "a")
+log_file = open(LOG_STD_FILE, "a")
 sys.stdout = log_file
+logger = Logger().getLogger('main')
 # 初始化sched模块的scheduler类
 # 第一个参数是一个可以返回时间戳的函数，第二个参数可以在定时未到达之前阻塞。
 schedule = sched.scheduler(time.time, time.sleep)
@@ -39,12 +41,12 @@ if __name__=="__main__":
     reload(sys)
     sys.setdefaultencoding("utf8")
     startTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    print "excute main", "the default encoding is ", sys.getdefaultencoding()," start time ",startTime
+    logger.info( "excute main ,the default encoding is %s start time %s",sys.getdefaultencoding(),startTime)
     try:
         times = 0
         while True:
             taskStartTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            print "this task start time:", taskStartTime
+            logger.info( "this task start time:"+ taskStartTime)
             if times==0:
                 main(dbName=MONGO_DBNAME, savePath=HDFS_PATH, inc=0)
             elif times==EXCUTE_TIMES:
@@ -53,11 +55,11 @@ if __name__=="__main__":
             else:
                 main(dbName=MONGO_DBNAME, savePath=HDFS_PATH, inc=SCH_INC)
             endTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            print "this task end time:",endTime," times:",times
+            logger.info( "this task end time: %s  times: %s",endTime,times)
             times +=1
-    except Exception:
-        traceback.print_exc(file=ERROR_LOG)
+    except Exception,e:
+        traceback.print_exc(file=open(ERROR_LOG,'w+'))
     finally:
         log_file.close()
         timestemp = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime())
-        os.rename(LOG_FILE,LOG_FILE+"."+timestemp)
+        os.rename(LOG_STD_FILE,LOG_STD_FILE+"."+timestemp)
