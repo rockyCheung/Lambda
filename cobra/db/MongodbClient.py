@@ -13,3 +13,10 @@ class MongodbClient:
     ############################################
     def getConnection(self,dataBaseName):
         return self.client[dataBaseName]
+
+    ############################################
+    # 插入数据
+    ############################################
+    def insertItem(self,dataBaseName,collectionName,list):
+        db = self.getConnection(dataBaseName=dataBaseName)
+        db[collectionName].insert(list)

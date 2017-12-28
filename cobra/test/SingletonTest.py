@@ -2,6 +2,7 @@
 from pyspark import SparkContext, SparkConf
 from cobra.kafka.Producer import Producer
 import json
+from cobra.spark.CheckPointParquet import CheckPointParquet
 class Singleton(object):
     _instance = None
 
@@ -51,16 +52,16 @@ class MyClass(Singleton):
 #     print i
 #     print "#########################################"
 #############################################################################
-client = Producer()
-request = {}
-request["name"] = "RockyCheung"
-request["sex"] = "man"
-request["age"] = 25
-request["marry"] = 'Yes'
-request["qq"] = '2211'
-msg = json.dumps(request)
-client.sendMsg(topicName='topic_test_1',message=msg)
-print ("{} has been sent successfully~".format(msg))
+# client = Producer()
+# request = {}
+# request["name"] = "RockyCheung"
+# request["sex"] = "man"
+# request["age"] = 25
+# request["marry"] = 'Yes'
+# request["qq"] = '2211'
+# msg = json.dumps(request)
+# client.sendMsg(topicName='topic_test_1',message=msg)
+# print ("{} has been sent successfully~".format(msg))
 #############################################################################
 
 #######################################################################################################################################
@@ -87,3 +88,6 @@ print ("{} has been sent successfully~".format(msg))
 # print one == two,one is two
 # one.p()
 # two.p()
+cc = CheckPointParquet("test","local")
+
+cc.queryCheckParquet().show()
