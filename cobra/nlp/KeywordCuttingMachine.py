@@ -3,8 +3,9 @@ import jieba
 import jieba.posseg as pseg
 import re
 import sys
+from cobra.conf.GlobalSettings import *
 #jieba 分词可以将我们的自定义词典导入，格式 “词” “词性” “词频”
-jieba.load_userdict('../data/userdict.txt')
+jieba.load_userdict(JIEBA_USER_DICT)
 
 #定义一个keyword类
 class KeywordCuttingMachine(object):
@@ -18,7 +19,7 @@ class KeywordCuttingMachine(object):
     #加载停用词库
     def chineseStopwords(self):          #导入停用词库
         stopword=[]
-        cfp=open('../data/stopwords-zh.txt',mode='r')#,'r+','utf-8')   #停用词的txt文件
+        cfp=open(JIEBA_STOP_WORDS,mode='r')#,'r+','utf-8')   #停用词的txt文件
         for line in cfp:
             for word in line.split():
                 stopword.append(word)

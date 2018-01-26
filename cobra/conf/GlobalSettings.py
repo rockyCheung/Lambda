@@ -1,19 +1,21 @@
 # -*- coding: UTF-8 -*-
-
+import os
 """
 Default  settings. Override these with settings in the module pointed to
 by the  environment variable.
 """
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ####################
 # CORE             #
 ####################
-ROOT_PATH = "/data"
+ROOT_PATH = BASE_DIR+"/data"
 #LOGGER_LEVEL =DEBUG 标识为debug，LOGGER_LEVEL =INFO 标识为info
 LOGGER_LEVEL = "DEBUG"
-LOG_FILE = "cobra.log"
-LOG_STD_FILE = "cobra_std.log"
-ERROR_LOG = "cobra_error.log"
+LOG_FILE = BASE_DIR+"/cobra.log"
+LOG_STD_FILE = BASE_DIR+"/cobra_std.log"
+ERROR_LOG = BASE_DIR+"/cobra_error.log"
 #检查点信息写入模式overwrite：覆盖 append：追加
 PARQUET_SAVE_MODE = "append"
 ######################
@@ -69,8 +71,10 @@ KAFKA_ZOO_CONFIG = {
 ##################################################
 # warehouse_location
 ##################################################
-WAREHOUSE_LOCATION = '../data/warehouse'
+WAREHOUSE_LOCATION = ROOT_PATH+'/warehouse'
 ##################################################
 # parquet save path
 ##################################################
-PARQUET_LOCATION = '../data'
+PARQUET_LOCATION = ROOT_PATH
+JIEBA_USER_DICT = ROOT_PATH + '/userdict.txt'
+JIEBA_STOP_WORDS = ROOT_PATH + '/stopwords-zh.txt'

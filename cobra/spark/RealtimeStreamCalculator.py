@@ -6,11 +6,14 @@ import time
 from cobra.conf.GlobalSettings import *
 from cobra.spark.SparkConfigSingleton import *
 from pyspark.sql import Row
+# from pyspark.streaming.kafka import KafkaUtils, TopicAndPartition
+
 class RealtimeStreamCalculator:
     def __init__(self,appName,masterName):
         self.config = SparkConfigSingleton(appName,masterName)
         self.sc = SparkContext(conf=self.config.getSparkConf())
         self.ssc = StreamingContext(sparkContext=self.sc,batchDuration=BATH_DURATION)
+        # self.ssc.addStreamingListener(streamingListener=)
 
     def readFileForRDD(self,path):
         textRdd = self.sc.textFile(path,use_unicode=False)

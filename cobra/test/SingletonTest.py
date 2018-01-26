@@ -88,6 +88,6 @@ class MyClass(Singleton):
 # print one == two,one is two
 # one.p()
 # two.p()
-cc = CheckPointParquet("test","local")
-
-cc.queryCheckParquet().show()
+# cc = CheckPointParquet("test","local")
+#
+# cc.queryCheckParquet().show()

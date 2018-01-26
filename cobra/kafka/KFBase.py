@@ -2,7 +2,8 @@
 
 from pykafka.client import KafkaClient
 from cobra.conf.GlobalSettings import *
-
+import logging as log
+log.basicConfig(level=log.INFO)
 class Base:
 
     def __init__(self):

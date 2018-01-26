@@ -5,10 +5,13 @@ from cobra.log.Logger import Logger
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer,StopWordsRemover
 from bs4 import BeautifulSoup
-from cobra.spark.CheckPointParquet import CheckPointParquet
-import pandas as pd
+from pyspark.ml import Pipeline
+from pyspark.ml.classification import LogisticRegression
 from cobra.nlp.KeywordCuttingMachine import KeywordCuttingMachine
 from nltk.probability import FreqDist
+from cobra.kafka.Producer import Producer
+import time
+import json
 
 class TermFrequency:
     def __init__(self,appName,masterName):
@@ -17,8 +20,17 @@ class TermFrequency:
         self.spark = SparkSession.builder.appName(appName).config("spark.sql.warehouse.dir", WAREHOUSE_LOCATION).master(masterName).getOrCreate()
         self.parquetLocation = PARQUET_LOCATION + "/featureExtract.parquet"
         self.cuttingMachine = KeywordCuttingMachine()
+
     ######################################################################
-    #将文章内容去除网页标签后迁移到article_text,生成关键词
+    # db lhhs  中查询collection article_text文章内容，
+    # 支持查询条件、排序
+    ######################################################################
+    def queryArticles(self,qeury,sort):
+        docs = self.mongoClient.query(dataBaseName='lhhs',collectionName='article_text',query=qeury,sort=sort)
+        return docs
+
+    ######################################################################
+    # 第1步，将文章内容去除网页标签后迁移到article_text,生成关键词
     ######################################################################
     def transformContent(self,dbName,collectionName):
         db = self.mongoClient.getConnection(dataBaseName=dbName)
@@ -29,13 +41,18 @@ class TermFrequency:
             content = soup.getText()
             i['content'] = self.cuttingMachine.deleSpecialChar(content)
             i['keywords'] = self.cuttingMachine.doCutting(i['content'])
+            i['status'] = 0 #处理状态，0：未处理 1：待处理 2：处理中 3：处理完成
+            i['mtime'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             db.article_text.insert(i)
 
-    def queryArticleDataFrame(self, dbName, collectionName):
-        db = self.mongoClient.getConnection(dataBaseName=dbName)
-        dataSet = db[collectionName]
+    ######################################################################
+    # 第2步，从mongo中查询文章内容，并把文章内容按照description、title、url、content
+    # type、heading、keywords的顺序创建DataFrame
+    ######################################################################
+    def queryArticleDataFrame(self,qeury,sort):
+        docs = self.queryArticles(self,qeury,sort)
         articleList = []
-        for i in dataSet.find():
+        for i in docs.find():
             description = i['description']
             title = i['title']
             url = i['url']
@@ -43,7 +60,8 @@ class TermFrequency:
             type = i['type']
             heading = i['heading']
             keywords = i['keywords']
-            articleTuple = (0, description, title, url, content, type, heading, keywords)
+            label = 0
+            articleTuple = (label, description, title, url, content, type, heading, keywords)
             articleList.append(articleTuple)
         sentenceData = self.spark.createDataFrame(articleList,
                                                   ["label", "description", "title", "url", "content", "type",
@@ -53,38 +71,52 @@ class TermFrequency:
     ######################################################################
     # 提取文章关键词，计算关键词词频，StopWordsRemover
     ######################################################################
-    def featureExtract(self,sentenceDataFrame):
-        # tokenizer = Tokenizer(inputCol="description", outputCol="keywords")
-        # wordsData = tokenizer.transform(sentenceData)
+    def featureExtract(self, trainDataframe,predictionDataframe):
+
+        # tokenizer = Tokenizer(inputCol="keywords", outputCol="words")
         remover = StopWordsRemover(inputCol="keywords", outputCol="filtered")
-        #设置停用词
+        # 设置停用词
         remover.setStopWords(self.cuttingMachine.chineseStopwords())
-        #去除文章中的停用词
-        removedData = remover.transform(sentenceDataFrame)
-        hashingTF = HashingTF(inputCol="filtered", outputCol="rawFeatures", numFeatures=100)
-        featurizedData = hashingTF.transform(removedData)
-        # alternatively, CountVectorizer can also be used to get term frequency vectors
-        idf = IDF(inputCol="rawFeatures", outputCol="features")
-        idfModel = idf.fit(featurizedData)
-        rescaledData = idfModel.transform(featurizedData)
-        resultData = rescaledData.select("label", "description", "title", "url","type",
-                                                   "heading","keywords","features")
-        # resultData.show()
-        resultJson = resultData.toJSON().first()
-        # resultData.show()
-        print resultJson
-        # db.article_feature.save(dict(resultJson))
-        resultData.write.save(self.parquetLocation, mode=PARQUET_SAVE_MODE)
+        hashingTF = HashingTF(inputCol=remover.getOutputCol(), outputCol="features")
+        idf = IDF(inputCol=hashingTF.getOutputCol(), outputCol="idff")
+        # lr = LogisticRegression(maxIter=10, regParam=0.001)
+        pipeline = Pipeline(stages=[remover, hashingTF, idf])
+        model = pipeline.fit(trainDataframe)
+        resultDataframe = model.transform(predictionDataframe)
+        selected = resultDataframe.select("filtered","features", "idff")
+        selected.show()
+        for row in selected.collect():
+            filtered,features, idff = row
+            self.logger.info("features: %s" , features)
+            self.logger.info("idff: %s" ,idff)
+            self.logger.info("filtered: %s" ,str(filtered).decode("unicode_escape").encode("utf-8"))
+        # #去除文章中的停用词
+        # removedData = remover.transform(trainDataframe)
+        # hashingTF = HashingTF(inputCol="filtered", outputCol="rawFeatures", numFeatures=100)
+        # featurizedData = hashingTF.transform(removedData)
+        # # alternatively, CountVectorizer can also be used to get term frequency vectors
+        # idf = IDF(inputCol="rawFeatures", outputCol="features")
+        # idfModel = idf.fit(featurizedData)
+        # rescaledData = idfModel.transform(featurizedData)
+        #
+        # resultData = rescaledData.select("label", "description", "title", "url","type",
+        #                                            "heading","keywords","features")
+        # # resultData.show()
+        # resultJson = resultData.toJSON().first()
+        # # resultData.show()
+        # print resultJson
+        # # db.article_feature.save(dict(resultJson))
+        # resultData.write.save(self.parquetLocation, mode=PARQUET_SAVE_MODE)
 
     ######################################################################
-    # 计算词频并保存都monggo
+    # 第3步，计算词频并保存到monggo
     ######################################################################
     def caculatTermFrequency(self,sentenceDataFrame):
         keywordsDataFrame = sentenceDataFrame.select("label","keywords")
         keywordsJson = keywordsDataFrame.toJSON().first()
         keywordsJson = eval(keywordsJson)
         # keywords = eval(str(keywordsJson).encode(encoding='utf-8')).keywords
-        print keywordsJson['keywords']
+        # print keywordsJson['keywords']
         fdist = FreqDist(keywordsJson['keywords'])
         Sum = len(keywordsJson['keywords'])
         for (s, n) in self.cuttingMachine.sortItem(fdist.items()):
@@ -98,8 +130,36 @@ class TermFrequency:
             frequencyDict['times'] = times
             self.mongoClient.insertItem(dataBaseName='lhhs', collectionName='article_feature', list=frequencyDict)
 
+    def stopSpark(self):
+        self.spark.stop()
+
+    def sendArticleToProducer(self,topic):
+        try:
+            producer = Producer()
+            docs = self.queryArticles(qeury={'status':2}, sort='mtime')
+            for i in docs:
+                self.logger.info('@send message start')
+                id = i['_id']
+                i['_id'] = id.__str__()
+                producer.sendMsg(topicName=topic,message=str(i).decode(encoding='unicode_escape').encode(encoding='utf-8'))
+                self.logger.info( '@the id:%s',i['_id'])
+                self.mongoClient.update(dataBaseName='lhhs',collectionName='article_text',updateFor={'_id':id},setValue={'$set': {'status': 3}})
+        except Exception:
+            self.logger.info('send message error:%s',Exception.message)
 
 term = TermFrequency(appName='article',masterName='local[1]')
 #term.transformContent(dbName='lhhs',collectionName='article')
-articleTuple = term.queryArticleDataFrame(dbName='lhhs', collectionName='article_text')
-term.caculatTermFrequency(articleTuple)
+try:
+    print 'test'
+    # term.transformContent('lhhs', 'article')
+    term.sendArticleToProducer(topic='topic_test_1')
+    # docs = term.queryArticles(qeury={'type':'3'},sort='type')
+    # for i in docs:
+    #     print i
+    # articleTuple = term.queryArticleDataFrame(dbName='lhhs', collectionName='article_text')
+    # articleTuple.show(n=20, truncate=True)
+    # term.featureExtract(articleTuple,articleTuple)
+    # term.caculatTermFrequency(articleTuple)
+except Exception,e:
+    term.stopSpark()
+    raise e
