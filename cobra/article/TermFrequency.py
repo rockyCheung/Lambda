@@ -17,7 +17,8 @@ class TermFrequency:
     def __init__(self,appName,masterName):
         self.mongoClient = MongodbClient(ip=MONGODB_CONFIG["ip"], port=MONGODB_CONFIG["port"])
         self.logger = Logger().getLogger('TermFrequency')
-        self.spark = SparkSession.builder.appName(appName).config("spark.sql.warehouse.dir", WAREHOUSE_LOCATION).master(masterName).getOrCreate()
+        if appName is not None and masterName is not None:
+            self.spark = SparkSession.builder.appName(appName).config("spark.sql.warehouse.dir", WAREHOUSE_LOCATION).master(masterName).getOrCreate()
         self.parquetLocation = PARQUET_LOCATION + "/featureExtract.parquet"
         self.cuttingMachine = KeywordCuttingMachine()
 
@@ -34,8 +35,8 @@ class TermFrequency:
     ######################################################################
     def transformContent(self,dbName,collectionName):
         db = self.mongoClient.getConnection(dataBaseName=dbName)
-        dataSet = db[collectionName]
-        for i in dataSet.find():
+        collection = db[collectionName]
+        for i in collection.find():
             content = i['content']
             soup = BeautifulSoup(content, 'lxml')
             content = soup.getText()
@@ -44,6 +45,8 @@ class TermFrequency:
             i['status'] = 0 #处理状态，0：未处理 1：待处理 2：处理中 3：处理完成
             i['mtime'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             db.article_text.insert(i)
+            # 删除原collection中的数据
+            # collection.delete_one({'_id':i['_id']})
 
     ######################################################################
     # 第2步，从mongo中查询文章内容，并把文章内容按照description、title、url、content
@@ -133,19 +136,24 @@ class TermFrequency:
     def stopSpark(self):
         self.spark.stop()
 
+    ######################################################################
+    # 发送信息到kafka，并将信息状态设置为等待处理状态
+    #
+    ######################################################################
     def sendArticleToProducer(self,topic):
         try:
             producer = Producer()
-            docs = self.queryArticles(qeury={'status':2}, sort='mtime')
+            docs = self.queryArticles(qeury={'status':0}, sort='mtime')
             for i in docs:
                 self.logger.info('@send message start')
                 id = i['_id']
                 i['_id'] = id.__str__()
                 producer.sendMsg(topicName=topic,message=str(i).decode(encoding='unicode_escape').encode(encoding='utf-8'))
                 self.logger.info( '@the id:%s',i['_id'])
-                self.mongoClient.update(dataBaseName='lhhs',collectionName='article_text',updateFor={'_id':id},setValue={'$set': {'status': 3}})
+                self.mongoClient.update(dataBaseName='lhhs',collectionName='article_text',updateFor={'_id':id},setValue={'$set': {'status': 1}})
         except Exception:
             self.logger.info('send message error:%s',Exception.message)
+            raise Exception
 
 term = TermFrequency(appName='article',masterName='local[1]')
 #term.transformContent(dbName='lhhs',collectionName='article')
