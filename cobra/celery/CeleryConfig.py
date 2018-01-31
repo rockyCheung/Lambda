@@ -11,6 +11,7 @@ app.conf.update(
     enable_utc=True,
     result_expires=3600,
     timezone = 'Asia/Shanghai',
+    accept_content = ['application/json','application/x-python-serialize']
     # accept_content = 'application/x-python-serialize'
 )
 # # 每分钟执行一次

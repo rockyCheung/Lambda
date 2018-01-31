@@ -26,5 +26,5 @@ def receiveArticlesFromConsumerTask():
 @app.task
 def add():
     s = 1+1
-    print '@@@@@@@@',s
+    print 'hello world',s
 

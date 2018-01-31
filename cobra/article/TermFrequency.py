@@ -203,12 +203,12 @@ class TermFrequency:
                     pass
 
 
-term = TermFrequency(appName='article',masterName='local[1]')
+# term = TermFrequency(appName='article',masterName='local[1]')
 #term.transformContent(dbName='lhhs',collectionName='article')
-try:
-    print 'test'
+# try:
+#     print 'test'
     # term.transformContent('lhhs', 'article')
-    term.sendArticleToProducer(topic='topic_test_1')
+    # term.sendArticleToProducer(topic='topic_test_1')
     # docs = term.queryArticles(qeury={'type':'3'},sort='type')
     # for i in docs:
     #     print i
@@ -216,6 +216,6 @@ try:
     # articleTuple.show(n=20, truncate=True)
     # term.featureExtract(articleTuple,articleTuple)
     # term.caculatTermFrequency(articleTuple)
-except Exception,e:
-    term.stopSpark()
-    raise e
+# except Exception,e:
+#     term.stopSpark()
+#     raise e
