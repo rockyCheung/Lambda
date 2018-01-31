@@ -10,8 +10,9 @@ from pyspark.ml.classification import LogisticRegression
 from cobra.nlp.KeywordCuttingMachine import KeywordCuttingMachine
 from nltk.probability import FreqDist
 from cobra.kafka.Producer import Producer
+from cobra.kafka.Consumer import Consumer
 import time
-import json
+import bson
 
 class TermFrequency:
     def __init__(self,appName,masterName):
@@ -49,13 +50,20 @@ class TermFrequency:
             # collection.delete_one({'_id':i['_id']})
 
     ######################################################################
-    # 第2步，从mongo中查询文章内容，并把文章内容按照description、title、url、content
-    # type、heading、keywords的顺序创建DataFrame
+    # 将list或dict转化为DataFrame，dict结构
+    # {'description':description,'title':title,'url':url,'content':content,'type':type
+    # 'heading':heading,'keywords':keywords}
     ######################################################################
-    def queryArticleDataFrame(self,qeury,sort):
-        docs = self.queryArticles(self,qeury,sort)
+    def creatDataFrame(self,articles):
         articleList = []
-        for i in docs.find():
+        tempList = []
+        if isinstance(articles,dict):
+            tempList.append(articles)
+
+        elif isinstance(articles,list):
+            tempList = articles
+
+        for i in tempList:
             description = i['description']
             title = i['title']
             url = i['url']
@@ -70,6 +78,15 @@ class TermFrequency:
                                                   ["label", "description", "title", "url", "content", "type",
                                                    "heading", "keywords"])
         return sentenceData
+
+
+    ######################################################################
+    # 第2步，从mongo中查询文章内容，并把文章内容按照description、title、url、content
+    # type、heading、keywords的顺序创建DataFrame
+    ######################################################################
+    def queryArticleDataFrame(self,qeury,sort):
+        docs = self.queryArticles(self,qeury,sort)
+        return self.creatDataFrame(articles=docs.find())
 
     ######################################################################
     # 提取文章关键词，计算关键词词频，StopWordsRemover
@@ -148,12 +165,43 @@ class TermFrequency:
                 self.logger.info('@send message start')
                 id = i['_id']
                 i['_id'] = id.__str__()
+                i['status'] = 1
                 producer.sendMsg(topicName=topic,message=str(i).decode(encoding='unicode_escape').encode(encoding='utf-8'))
                 self.logger.info( '@the id:%s',i['_id'])
                 self.mongoClient.update(dataBaseName='lhhs',collectionName='article_text',updateFor={'_id':id},setValue={'$set': {'status': 1}})
         except Exception:
             self.logger.info('send message error:%s',Exception.message)
             raise Exception
+
+    ######################################################################
+    # 从kafka订阅消息，并将信息进行词频处理，将处理完的结果保存mongo
+    #
+    ######################################################################
+    def receiveArticlesFromConsumer(self,topic):
+        consumer = Consumer()
+        simple = consumer.getSimpleConsumer(topicName=topic, group=None)
+        for message in simple:
+            if message is not None:
+                msgValue = str(message.value)
+                self.logger.info("the message offset:%s",message.offset)
+                # msg = ast.literal_eval(message.value)
+                if msgValue.startswith('{', 0) and msgValue.endswith('}'):
+                    msg = {}
+                    try:
+                        msg = eval(msgValue)
+                    except Exception:
+                        self.logger.error('this msg contain can not analysis Object')
+                    if len(msg) > 0 and msg['status']==1:
+                        self.logger.info('bson:%s', bson.ObjectId(msg['_id']))
+                        sentenceDataFrame = self.creatDataFrame(msg)
+                        self.caculatTermFrequency(sentenceDataFrame)
+                        self.mongoClient.update(dataBaseName='lhhs', collectionName='article_text',\
+                                           updateFor={'_id': bson.ObjectId(msg['_id'])},\
+                                           setValue={'$set': {'status': 3}})
+
+                else:
+                    pass
+
 
 term = TermFrequency(appName='article',masterName='local[1]')
 #term.transformContent(dbName='lhhs',collectionName='article')

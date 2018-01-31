@@ -79,4 +79,4 @@ PARQUET_LOCATION = ROOT_PATH
 JIEBA_USER_DICT = ROOT_PATH + '/userdict.txt'
 JIEBA_STOP_WORDS = ROOT_PATH + '/stopwords-zh.txt'
 #mongo broker
-BROKER_URL = 'mongodb://192.168.1.178:27017/cobra'
+BROKER_URL = 'mongodb://192.168.1.178:27017/lhhs'
