@@ -63,7 +63,7 @@ Cobra是一个大数据实时处理，计算的项目。
     
 ## 用到主要技术：
 
-    项目中用到了mongodb、hdfs、sparkSQL
+    项目中用到了mongodb、hdfs、SparkSQL、SparkStream、SparkML、Celery
     
 ## 工作原理：
 
@@ -73,47 +73,53 @@ Cobra是一个大数据实时处理，计算的项目。
  
  ## 使用说明：
  
-    1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
+    ### 1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
     
-    from cobra.conf.GlobalSettings import *
+        from cobra.conf.GlobalSettings import *
     
-    #获取zookeeper 集群地址
+        #获取zookeeper 集群地址
     
-    para = KAFKA_ZOO_CONFIG['hosts']
+        para = KAFKA_ZOO_CONFIG['hosts']
     
-    2、Logger为日志类
+    ### 2、Logger为日志类
     
-    from cobra.log.Logger import Logger
+        from cobra.log.Logger import Logger
     
-    logger = Logger().getLogger('DataMigrate')
+        logger = Logger().getLogger('DataMigrate')
     
-    #%s为格式化占位符
+        #%s为格式化占位符
     
-    logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
+        logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
     
-    3、MongodbClient为Mongo客户端
+    ### 3、MongodbClient为Mongo客户端
     
-    client = MongodbClient('192.168.1.178',27017)
+        client = MongodbClient('192.168.1.178',27017)
     
-    #house_orignal数据库名称
+        #house_orignal数据库名称
     
-    db = client.getConnection('house_orignal')
+        db = client.getConnection('house_orignal')
     
-    #获取数据库中所有collection名称
+        #获取数据库中所有collection名称
     
-    collectionNames  = db.collection_names()
+        collectionNames  = db.collection_names()
     
-    #获取名称为ABC_sale的collection的数据集
+        #获取名称为ABC_sale的collection的数据集
     
-    dataSet = db.ABC_sale
+        dataSet = db.ABC_sale
     
-    #获取游标
+        #获取游标
     
-    cursor1 = dataSet.find().skip(1)
+        cursor1 = dataSet.find().skip(1)
     
-    #设置游标的超时时间为永久
+        #设置游标的超时时间为永久
     
-    cursor1.add_option(16)
+        cursor1.add_option(16)
+
+    ### 4、kafka服务提供者和消费者
+        Producer实现了kafka向消息生产者发送信息的方法sendMsg(topicName,message)
+        Consumer实现了kafka作为消息消费者订阅消息的方法getSimpleConsumer(topicName,group)、getBalanceConsumer(topicName,group)
+
+
     
     
     
