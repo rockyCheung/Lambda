@@ -24,7 +24,6 @@ def receiveArticlesFromConsumerTask():
     term.stopSpark()
 
 @app.task
-def add():
-    s = 1+1
+def add(s):
     print 'hello world',s
 

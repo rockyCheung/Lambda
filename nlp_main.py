@@ -25,20 +25,22 @@ if __name__=="__main__":
     print '##################################################################################'
     while True:
         str = raw_input("请输入启动服务名称：")
-        if str == 1:
+        if str == '1':
             print 'start excute articlesTransformTask'
             articlesTransformTask.delay()
             print 'start excute articlesTransformTask end!'
-        elif str == 2:
+        elif str == '2':
             print 'start excute sendArticleToProducerTask'
-            # sendArticleToProducerTask.delay()
+            sendArticleToProducerTask.delay()
             print 'start excute sendArticleToProducerTask end!'
-        elif str == 3:
+        elif str == '3':
             print 'start excute receiveArticlesFromConsumerTask'
-            # receiveArticlesFromConsumerTask.delay()
+            receiveArticlesFromConsumerTask.delay()
             print 'start excute receiveArticlesFromConsumerTask end!'
         else:
             print 'start excute '
-            add.delay()
+            for i in range(100):
+                print 'thread %d add.start!'%i
+                add.delay(i)
             print 'start excute end!'
 
