@@ -73,7 +73,7 @@ Cobra是一个大数据实时处理，计算的项目。
  
  ## 使用说明：
  
-    ### 1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
+    1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
     
         from cobra.conf.GlobalSettings import *
     
@@ -81,7 +81,7 @@ Cobra是一个大数据实时处理，计算的项目。
     
         para = KAFKA_ZOO_CONFIG['hosts']
     
-    ### 2、Logger为日志类
+    2、Logger为日志类
     
         from cobra.log.Logger import Logger
     
@@ -91,7 +91,7 @@ Cobra是一个大数据实时处理，计算的项目。
     
         logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
     
-    ### 3、MongodbClient为Mongo客户端
+    3、MongodbClient为Mongo客户端
     
         client = MongodbClient('192.168.1.178',27017)
     
@@ -115,9 +115,13 @@ Cobra是一个大数据实时处理，计算的项目。
     
         cursor1.add_option(16)
 
-    ### 4、kafka服务提供者和消费者
+    4、kafka服务提供者和消费者
         Producer实现了kafka向消息生产者发送信息的方法sendMsg(topicName,message)
         Consumer实现了kafka作为消息消费者订阅消息的方法getSimpleConsumer(topicName,group)、getBalanceConsumer(topicName,group)
+        
+    5、celery
+       Task.py
+       CeleryConfig.py
 
 
     
