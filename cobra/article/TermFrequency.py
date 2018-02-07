@@ -5,7 +5,7 @@ from cobra.log.Logger import Logger
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer,StopWordsRemover
 from bs4 import BeautifulSoup
-from pyspark.ml import Pipeline
+from pyspark.ml import Pipeline,PipelineModel
 from pyspark.ml.classification import LogisticRegression
 from cobra.nlp.KeywordCuttingMachine import KeywordCuttingMachine
 from nltk.probability import FreqDist
@@ -211,10 +211,11 @@ try:
     # docs = term.queryArticles(qeury={'type':'3'},sort='type')
     # for i in docs:
     #     print i
-    articleTuple = term.queryArticleDataFrame(qeury=None,sort=None)
-    print articleTuple.first()
+    #articleTuple = term.queryArticleDataFrame(qeury=None,sort=None)
+    pipeline = PipelineModel.load(ROOT_PATH + '/pipeline')
+    print pipeline
     # articleTuple.show(n=20, truncate=True)
-    term.featureExtract(articleTuple,articleTuple.limit(num=1))
+    #term.featureExtract(articleTuple,articleTuple.limit(num=1))
     # term.caculatTermFrequency(articleTuple)
 except Exception,e:
     term.stopSpark()
