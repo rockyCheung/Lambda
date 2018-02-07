@@ -63,6 +63,9 @@ class TermFrequency:
         elif isinstance(articles,list):
             tempList = articles
 
+        else:
+            tempList = articles
+
         for i in tempList:
             description = i['description']
             title = i['title']
@@ -74,7 +77,9 @@ class TermFrequency:
             label = 0
             articleTuple = (label, description, title, url, content, type, heading, keywords)
             articleList.append(articleTuple)
-        sentenceData = self.spark.createDataFrame(articleList,
+        print articleList
+        if len(articleList)>0:
+            sentenceData = self.spark.createDataFrame(articleList,
                                                   ["label", "description", "title", "url", "content", "type",
                                                    "heading", "keywords"])
         return sentenceData
@@ -85,47 +90,41 @@ class TermFrequency:
     # type、heading、keywords的顺序创建DataFrame
     ######################################################################
     def queryArticleDataFrame(self,qeury,sort):
-        docs = self.queryArticles(self,qeury,sort)
-        return self.creatDataFrame(articles=docs.find())
+        docs = self.queryArticles(qeury,sort)
+        return self.creatDataFrame(articles=docs)
 
     ######################################################################
     # 提取文章关键词，计算关键词词频，StopWordsRemover
     ######################################################################
     def featureExtract(self, trainDataframe,predictionDataframe):
-
-        # tokenizer = Tokenizer(inputCol="keywords", outputCol="words")
-        remover = StopWordsRemover(inputCol="keywords", outputCol="filtered")
-        # 设置停用词
-        remover.setStopWords(self.cuttingMachine.chineseStopwords())
-        hashingTF = HashingTF(inputCol=remover.getOutputCol(), outputCol="features")
-        idf = IDF(inputCol=hashingTF.getOutputCol(), outputCol="idff")
-        # lr = LogisticRegression(maxIter=10, regParam=0.001)
-        pipeline = Pipeline(stages=[remover, hashingTF, idf])
+        pipeline = None
+        try:
+            pipeline = Pipeline.load(ROOT_PATH+'/pipeline')
+        except Exception:
+            print Exception.message
+            self.logger.error(Exception)
+        if pipeline is None:
+            # tokenizer = Tokenizer(inputCol="keywords", outputCol="words")
+            remover = StopWordsRemover(inputCol="keywords", outputCol="filtered")
+            # 设置停用词
+            remover.setStopWords(self.cuttingMachine.chineseStopwords())
+            hashingTF = HashingTF(inputCol=remover.getOutputCol(), outputCol="features")
+            idf = IDF(inputCol=hashingTF.getOutputCol(), outputCol="idff")
+            # lr = LogisticRegression(maxIter=10, regParam=0.001)
+            pipeline = Pipeline(stages=[remover, hashingTF, idf])
         model = pipeline.fit(trainDataframe)
+        model.write().overwrite().save(ROOT_PATH+'/pipeline')
         resultDataframe = model.transform(predictionDataframe)
+        resultDataframe.show()
         selected = resultDataframe.select("filtered","features", "idff")
-        selected.show()
+
         for row in selected.collect():
             filtered,features, idff = row
             self.logger.info("features: %s" , features)
             self.logger.info("idff: %s" ,idff)
             self.logger.info("filtered: %s" ,str(filtered).decode("unicode_escape").encode("utf-8"))
-        # #去除文章中的停用词
-        # removedData = remover.transform(trainDataframe)
-        # hashingTF = HashingTF(inputCol="filtered", outputCol="rawFeatures", numFeatures=100)
-        # featurizedData = hashingTF.transform(removedData)
-        # # alternatively, CountVectorizer can also be used to get term frequency vectors
-        # idf = IDF(inputCol="rawFeatures", outputCol="features")
-        # idfModel = idf.fit(featurizedData)
-        # rescaledData = idfModel.transform(featurizedData)
-        #
-        # resultData = rescaledData.select("label", "description", "title", "url","type",
-        #                                            "heading","keywords","features")
-        # # resultData.show()
-        # resultJson = resultData.toJSON().first()
-        # # resultData.show()
-        # print resultJson
-        # # db.article_feature.save(dict(resultJson))
+
+
         # resultData.write.save(self.parquetLocation, mode=PARQUET_SAVE_MODE)
 
     ######################################################################
@@ -203,19 +202,21 @@ class TermFrequency:
                     pass
 
 
-# term = TermFrequency(appName='article',masterName='local[1]')
-#term.transformContent(dbName='lhhs',collectionName='article')
-# try:
-#     print 'test'
+term = TermFrequency(appName='article',masterName='local[1]')
+# term.transformContent(dbName='lhhs',collectionName='article')
+try:
+    # print 'test'
     # term.transformContent('lhhs', 'article')
     # term.sendArticleToProducer(topic='topic_test_1')
     # docs = term.queryArticles(qeury={'type':'3'},sort='type')
     # for i in docs:
     #     print i
-    # articleTuple = term.queryArticleDataFrame(dbName='lhhs', collectionName='article_text')
+    articleTuple = term.queryArticleDataFrame(qeury=None,sort=None)
+    print articleTuple.first()
     # articleTuple.show(n=20, truncate=True)
-    # term.featureExtract(articleTuple,articleTuple)
+    term.featureExtract(articleTuple,articleTuple.limit(num=1))
     # term.caculatTermFrequency(articleTuple)
-# except Exception,e:
-#     term.stopSpark()
-#     raise e
+except Exception,e:
+    term.stopSpark()
+    term.logger.error(e)
+    raise e
