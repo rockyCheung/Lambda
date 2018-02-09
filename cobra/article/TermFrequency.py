@@ -13,6 +13,7 @@ from cobra.kafka.Producer import Producer
 from cobra.kafka.Consumer import Consumer
 import time
 import bson
+from pyspark.ml.clustering import KMeans
 
 class TermFrequency:
     def __init__(self,appName,masterName):
@@ -75,12 +76,13 @@ class TermFrequency:
             heading = i['heading']
             keywords = i['keywords']
             label = 0
-            articleTuple = (label, description, title, url, content, type, heading, keywords)
+            id = i['_id'].__str__()
+            articleTuple = (label,id, description, title, url, content, type, heading, keywords)
             articleList.append(articleTuple)
         print articleList
         if len(articleList)>0:
             sentenceData = self.spark.createDataFrame(articleList,
-                                                  ["label", "description", "title", "url", "content", "type",
+                                                  ["label","id", "description", "title", "url", "content", "type",
                                                    "heading", "keywords"])
         return sentenceData
 
@@ -94,7 +96,7 @@ class TermFrequency:
         return self.creatDataFrame(articles=docs)
 
     ######################################################################
-    # 提取文章关键词，计算关键词词频，StopWordsRemover
+    # 提取文章关键词，计算关键词词频，StopWordsRemover TF-IDF模型
     ######################################################################
     def featureExtract(self, trainDataframe,predictionDataframe):
         pipeline = None
@@ -113,7 +115,7 @@ class TermFrequency:
             # lr = LogisticRegression(maxIter=10, regParam=0.001)
             pipeline = Pipeline(stages=[remover, hashingTF, idf])
         model = pipeline.fit(trainDataframe)
-        model.write().overwrite().save(ROOT_PATH+'/pipeline')
+        pipeline.write().overwrite().save(ROOT_PATH+'/pipeline')
         resultDataframe = model.transform(predictionDataframe)
         resultDataframe.show()
         selected = resultDataframe.select("filtered","features", "idff")
@@ -123,9 +125,39 @@ class TermFrequency:
             self.logger.info("features: %s" , features)
             self.logger.info("idff: %s" ,idff)
             self.logger.info("filtered: %s" ,str(filtered).decode("unicode_escape").encode("utf-8"))
-
-
+        return selected
         # resultData.write.save(self.parquetLocation, mode=PARQUET_SAVE_MODE)
+    ######################################################################
+    #逻辑回归分析
+    ######################################################################
+    def featureExtractLr(self, trainDataframe,predictionDataframe):
+        pipeline = None
+        try:
+            # pipeline = PipelineModel.load(ROOT_PATH+'/logistic')
+            pipeline = Pipeline.load(ROOT_PATH + '/logistic')
+        except Exception:
+            print Exception.message
+            self.logger.error(Exception)
+        if pipeline is None:
+            # tokenizer = Tokenizer(inputCol="keywords", outputCol="words")
+            remover = StopWordsRemover(inputCol="keywords", outputCol="filtered")
+            # 设置停用词
+            remover.setStopWords(self.cuttingMachine.chineseStopwords())
+            hashingTF = HashingTF(inputCol=remover.getOutputCol(), outputCol="features")
+            lr = LogisticRegression(maxIter=10, regParam=0.001).setElasticNetParam(0.8)
+            pipeline = Pipeline(stages=[remover, hashingTF, lr])
+        model = pipeline.fit(trainDataframe)
+        pipeline.write().overwrite().save(ROOT_PATH+'/logistic')
+        # model.write().overwrite().save(ROOT_PATH+'/logistic')
+        resultDataframe = model.transform(predictionDataframe)
+        resultDataframe.show()
+        selected = resultDataframe.select("id", "features", "probability", "prediction")
+
+        for row in selected.collect():
+            rid, features, prob, prediction = row
+            self.logger.info("features: %s" , features)
+            self.logger.info("prob: %s" ,str(prob))
+            self.logger.info("prediction: %s" ,str(prediction))
 
     ######################################################################
     # 第3步，计算词频并保存到monggo
@@ -202,6 +234,25 @@ class TermFrequency:
                     pass
 
 
+    ######################################################################
+    #逻辑回归分析
+    ######################################################################
+    def featureExtractKMean(self, dataset):
+        # Trains a k-means model.
+        kmeans = KMeans().setK(2).setSeed(1).setFeaturesCol('idff')
+        model = kmeans.fit(dataset)
+
+        # Evaluate clustering by computing Within Set Sum of Squared Errors.
+        wssse = model.computeCost(dataset)
+        print("Within Set Sum of Squared Errors = " + str(wssse))
+
+        # Shows the result.
+        centers = model.clusterCenters()
+        print("Cluster Centers: ")
+        for center in centers:
+            print(center)
+
+
 term = TermFrequency(appName='article',masterName='local[1]')
 # term.transformContent(dbName='lhhs',collectionName='article')
 try:
@@ -211,11 +262,12 @@ try:
     # docs = term.queryArticles(qeury={'type':'3'},sort='type')
     # for i in docs:
     #     print i
-    #articleTuple = term.queryArticleDataFrame(qeury=None,sort=None)
-    pipeline = PipelineModel.load(ROOT_PATH + '/pipeline')
-    print pipeline
+    articleTuple = term.queryArticleDataFrame(qeury=None,sort=None)
+    # pipeline = PipelineModel.load(ROOT_PATH + '/pipeline')
+    # print pipeline
     # articleTuple.show(n=20, truncate=True)
-    #term.featureExtract(articleTuple,articleTuple.limit(num=1))
+    dataset = term.featureExtract(articleTuple,articleTuple.limit(num=1))
+    term.featureExtractKMean(dataset)
     # term.caculatTermFrequency(articleTuple)
 except Exception,e:
     term.stopSpark()

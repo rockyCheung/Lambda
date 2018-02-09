@@ -24,6 +24,20 @@ def receiveArticlesFromConsumerTask():
     term.stopSpark()
 
 @app.task
+def tfIdfTask():
+    term = TermFrequency(appName='article', masterName='local[1]')
+    articleTuple = term.queryArticleDataFrame(qeury=None, sort=None)
+    term.featureExtract(articleTuple, articleTuple.limit(num=1))
+
+
+@app.task
+def lineLogisticTask():
+    term = TermFrequency(appName='article', masterName='local[1]')
+    articleTuple = term.queryArticleDataFrame(qeury=None, sort=None)
+    term.featureExtractLr(articleTuple, articleTuple.limit(num=1))
+
+
+@app.task
 def add(s):
     print 'hello world',s
 
