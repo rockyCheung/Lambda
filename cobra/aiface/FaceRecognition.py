@@ -19,18 +19,21 @@ class FaceRecognition(object):
         image = self.loadImage(path)
         return self.touchFaceImage(image)
 
+    def landmarksImage(self,image,faceLocations):
+        return image,self.aiface.face_landmarks(face_image=image,face_locations=faceLocations)
+
     def landmarks(self,path,faceLocations):
         image = self.loadImage(path)
-        return image,self.aiface.face_landmarks(face_image=image,face_locations=faceLocations)
+        return self.landmarksImage(image,faceLocations)
 
     def compareFaces(self,face,unknownFace):
         image = self.loadImage(path=face)
-        imageArray, faceLocations = self.touchFaceImage(image=image)
-        imageEncoding = self.aiface.face_encodings(image,known_face_locations=faceLocations,num_jitters=1)[0]
+        # imageArray, faceLocations = self.touchFaceImage(image=image)
+        imageEncoding = self.aiface.face_encodings(image,known_face_locations=None,num_jitters=1)[0]
 
         unknown = self.loadImage(path=unknownFace)
-        unknownImageArray, unknownFaceLocations = self.touchFaceImage(image=unknown)
-        unknownEncoding = self.aiface.face_encodings(unknown,known_face_locations=unknownFaceLocations,num_jitters=1)[0]
+        # unknownImageArray, unknownFaceLocations = self.touchFaceImage(image=unknown)
+        unknownEncoding = self.aiface.face_encodings(unknown,known_face_locations=None,num_jitters=1)[0]
         results = self.aiface.compare_faces([imageEncoding], unknownEncoding)
         if results[0] == True:
             print("It's a picture of me!")
@@ -83,9 +86,9 @@ class FaceRecognition(object):
             pil_image.show()
 
 aiface = FaceRecognition()
-# image,faceLocations = aiface.touchFace('images/IMG_1047.JPG')
-# limage,landmarks = aiface.landmarks('images/IMG_1047.JPG',faceLocations=faceLocations)
+# image,faceLocations = aiface.touchFace('images/chuanpu1.jpg')
+# limage,landmarks = aiface.landmarksImage(image,faceLocations)
 # aiface.showFace(image, faceLocations)
 # aiface.showFaceLandmarks(limage,landmarks)
-aiface.compareFaces(face='images/IMG_1047.JPG',unknownFace='images/unknown.jpeg')
+print aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpeg')
 # print faceLocations,landmarks
