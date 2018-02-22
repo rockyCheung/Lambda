@@ -2,40 +2,39 @@
 Cobra是一个大数据实时处理，计算的项目。
 测试数据来源 http://archive.ics.uci.edu/ml/index.php
 ## 主要的功能模块：
-*1、批量数据迁移
-*2、实时数据处理、运算
+###1、批量数据迁移
+###2、实时数据处理、运算
 目前支持的迁移操作是从mongo迁移到HDFS。
    
 ## 项目结构：
 >cobra.
-    >>conf.
-      >>>GlobalSettings.py
-    >>db.
-      >>>MongodbClient.py
-    >>hdfs.
-      >>>HDFSClient.py
-    >>kafka.
-      >>>Consumer.py
-      >>>KFBase.py
-      >>>Producer.py
-    >>log.
-      >>>Logger.py
-        
-    >>migrate.
-      >>>DataMigrate.py
-    >spark.
-      >>>CheckPointParquet.py
-      >>>RealtimeStreamCalculator.py
-      >>>SparkConfigSingleton.py
-    >data
-      >>>images
-      >>>featureExtract.parquet
-      >>>logistic
-      >>>pipeline
-      >>>warehouse
-      >>>writePoint.parquet
-      >>>stopwords-zh.txt
-      >>>userdict.txt
+>>conf.
+>>>GlobalSettings.py
+>>db.
+>>>MongodbClient.py
+>>hdfs.
+>>>HDFSClient.py
+>>kafka.
+>>>Consumer.py
+>>>KFBase.py
+>>>Producer.py
+>>log.
+>>>Logger.py
+>>migrate.
+>>>DataMigrate.py
+>spark.
+>>>CheckPointParquet.py
+>>>RealtimeStreamCalculator.py
+>>>SparkConfigSingleton.py
+>data
+>>>images
+>>>featureExtract.parquet
+>>>logistic
+>>>pipeline
+>>>warehouse
+>>>writePoint.parquet
+>>>stopwords-zh.txt
+>>>userdict.txt
 >main.py
 >setup.py
 >requirement.rst
@@ -44,26 +43,22 @@ Cobra是一个大数据实时处理，计算的项目。
     
 ## 用到主要技术：
 
-    项目中用到了mongodb、hdfs、SparkSQL、SparkStream、SparkML、Celery
+项目中用到了mongodb、hdfs、SparkSQL、SparkStream、SparkML、Celery
     
 ## 工作原理：
 
-    1、借助mongo客户端批量读取已经处理过的数据，然后通过hdfs客户端自动根据collection名称创建文件，并将数据写入hdfs，同时生成读取check点，记入parquet。
+###1、借助mongo客户端批量读取已经处理过的数据，然后通过hdfs客户端自动根据collection名称创建文件，并将数据写入hdfs，同时生成读取check点，记入parquet。
     
-    2、Apache Parquet是Hadoop生态圈中一种新型列式存储格式，它可以兼容Hadoop生态圈中大多数计算框架(Hadoop、Spark等)，被多种查询引擎支持（Hive、Impala、Drill等），并且它是语言和平台无关的。
+###2、Apache Parquet是Hadoop生态圈中一种新型列式存储格式，它可以兼容Hadoop生态圈中大多数计算框架(Hadoop、Spark等)，被多种查询引擎支持（Hive、Impala、Drill等），并且它是语言和平台无关的。
  
- ## 使用说明：
+## 使用说明：
  
-    1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
+###1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
+```from cobra.conf.GlobalSettings import *```
+`获取zookeeper 集群地址`
+```para = KAFKA_ZOO_CONFIG['hosts']```
     
-        from cobra.conf.GlobalSettings import *
-
-    
-        #获取zookeeper 集群地址
-    
-        para = KAFKA_ZOO_CONFIG['hosts']
-    
-    2、Logger为日志类
+###2、Logger为日志类
 
         from cobra.log.Logger import Logger
     
@@ -73,7 +68,7 @@ Cobra是一个大数据实时处理，计算的项目。
     
         logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
     
-    3、MongodbClient为Mongo客户端
+###3、MongodbClient为Mongo客户端
     
         client = MongodbClient('192.168.1.178',27017)
     
@@ -97,16 +92,15 @@ Cobra是一个大数据实时处理，计算的项目。
     
         cursor1.add_option(16)
 
-    4、kafka服务提供者和消费者
+###4、kafka服务提供者和消费者
         Producer实现了kafka向消息生产者发送信息的方法sendMsg(topicName,message)
         Consumer实现了kafka作为消息消费者订阅消息的方法getSimpleConsumer(topicName,group)、getBalanceConsumer(topicName,group)
         
-    5、celery
-    
-       * Task.py
-       * CeleryConfig.py
-       
-     6、人脸识别调用方法
+###5、celery
+```Task.py
+CeleryConfig.py```
+
+###6、人脸识别调用方法
      
      # face_recognition是什么
   face_recognition基于python开发的人像识别库，其借助blib机器深度学习库实现人脸图像精准识别，识别率高达99.38%。
