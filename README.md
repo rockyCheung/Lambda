@@ -186,10 +186,11 @@ CeleryConfig.py
                 for facialFeature in facialFeatures:
                     d.line(faceLandmarks[facialFeature],fill='red', width=3)
 
-                pil_image.show()```
+                pil_image.show()
+```
 
 
-##### 如何识别仓老师的脸
+#### 如何识别仓老师的脸
 
 ```
     from cobra.aiface. FaceRecognition import FaceRecognition
@@ -198,12 +199,15 @@ CeleryConfig.py
     aiface.showFace(image, faceLocations)
 ```
 
-    touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
+touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
+
 
 ![仓老师](http://www.pathcurve.cn/assets/uploads/files/1518572459349-timg.jpeg)
 ![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572481295-cangllaoshi_face.png)
 
-##### 如何标识人脸的五官
+
+#### 如何标识人脸的五官
+
 
 ```
       from cobra.aiface. FaceRecognition import FaceRecognition
@@ -218,7 +222,9 @@ CeleryConfig.py
 
     川普的脸正标准啊，方方正正的整好做人脸识别～
 
+
 #### 如何对比两张脸是不是同一人
+
 
 ```aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')```
 
