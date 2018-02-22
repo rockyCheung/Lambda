@@ -221,27 +221,17 @@ Cobra是一个大数据实时处理，计算的项目。
     image,faceLocations = aiface.touchFace('images/canglaoshi.jpeg')
     aiface.showFace(image, faceLocations)
 touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
-![0_1518572459130_timg.jpeg](/assets/uploads/files/1518572459349-timg.jpeg) 
-运行结果——
-![0_1518572480650_cangllaoshi_face.png](/assets/uploads/files/1518572481295-cangllaoshi_face-resized.png) 
+
 # 如何标识人脸的五官
       from cobra.aiface. FaceRecognition import FaceRecognition
       aiface = FaceRecognition()
       image,faceLocations = aiface.touchFace('images/chuanpu1.jpg')
       limage,landmarks = aiface.landmarksImage(image,faceLocations)
       aiface.showFaceLandmarks(limage,landmarks)
-![0_1518572542400_7a4ed78e28d2aaddf32205c6c38ae33d.jpg](/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg) 
-运行结果——
-![0_1518572818311_chuanpu_face.png](/assets/uploads/files/1518572819357-chuanpu_face-resized.png) 
 川普的脸正标准啊，方方正正的整好做人脸识别～
 # 如何对比两张脸是不是同一人  
             aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')
 如果为同一人返回True
-
-### 想要看更多关于人工智能的代码示例，可访问如下地址自行下载～
-https://github.com/rockyCheung/Lambda.git
-### 欢迎打赏，多了不要，只要一元
-![0_1518576768151_文乞.png](/assets/uploads/files/1518576768411-文乞.png)
 
 
     
