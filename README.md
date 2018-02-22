@@ -2,12 +2,9 @@
 Cobra是一个大数据实时处理，计算的项目。
 测试数据来源 http://archive.ics.uci.edu/ml/index.php
 ## 主要的功能模块：
-
-   *1、批量数据迁移
-   
-   *2、实时数据处理、运算
-   
-       目前支持的迁移操作是从mongo迁移到HDFS。
+*1、批量数据迁移
+*2、实时数据处理、运算
+目前支持的迁移操作是从mongo迁移到HDFS。
    
 ## 项目结构：
 >cobra.
@@ -106,8 +103,8 @@ Cobra是一个大数据实时处理，计算的项目。
         
     5、celery
     
-       *Task.py
-       *CeleryConfig.py
+       * Task.py
+       * CeleryConfig.py
        
      6、人脸识别调用方法
      
