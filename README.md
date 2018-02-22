@@ -55,7 +55,7 @@
     
 ## 用到主要技术：
 
-项目中用到了mongodb、hdfs、SparkSQL、SparkStream、SparkML、Celery
+项目中用到了mongodb、hdfs、SparkSQL、SparkStream、SparkML、Celery、NLTK
 Apache Parquet是Hadoop生态圈中一种新型列式存储格式，它可以兼容Hadoop生态圈中大多数计算框架(Hadoop、Spark等)，被多种查询引擎支持（Hive、Impala、Drill等），并且它是语言和平台无关的。
 Celery是一种分布式任务管理框架。
 Spark应该不用介绍～

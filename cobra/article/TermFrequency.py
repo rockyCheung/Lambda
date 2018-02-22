@@ -14,6 +14,7 @@ from cobra.kafka.Consumer import Consumer
 import time
 import bson
 from pyspark.ml.clustering import KMeans
+from nltk.corpus import treebank
 
 class TermFrequency:
     def __init__(self,appName,masterName):
@@ -169,6 +170,7 @@ class TermFrequency:
         # keywords = eval(str(keywordsJson).encode(encoding='utf-8')).keywords
         # print keywordsJson['keywords']
         fdist = FreqDist(keywordsJson['keywords'])
+        fdist.plot(30,cumulative = True)
         Sum = len(keywordsJson['keywords'])
         for (s, n) in self.cuttingMachine.sortItem(fdist.items()):
             frequencyDict = {}
@@ -266,9 +268,9 @@ try:
     # pipeline = PipelineModel.load(ROOT_PATH + '/pipeline')
     # print pipeline
     # articleTuple.show(n=20, truncate=True)
-    dataset = term.featureExtract(articleTuple,articleTuple.limit(num=1))
-    term.featureExtractKMean(dataset)
-    # term.caculatTermFrequency(articleTuple)
+    # dataset = term.featureExtract(articleTuple,articleTuple.limit(num=1))
+    # term.featureExtractKMean(dataset)
+    term.caculatTermFrequency(articleTuple)
 except Exception,e:
     term.stopSpark()
     term.logger.error(e)
