@@ -203,7 +203,7 @@ touchFace返回两个参数，第一个是图片的数字数组，第二个是�
 ![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572819357-chuanpu_face.png)
 川普的脸正标准啊，方方正正的整好做人脸识别～
 # 如何对比两张脸是不是同一人
-```aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')```s
+```aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')```
 如果为同一人返回True
 
 [技术论坛](http://www.pathcurve.cn)
