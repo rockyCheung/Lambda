@@ -1,4 +1,6 @@
 # Lambda
+meolu/walden · GitHub：Cobra
+
 Cobra是一个大数据实时处理，计算的项目。
 测试数据来源 http://archive.ics.uci.edu/ml/index.php
 ## 主要的功能模块：
@@ -85,12 +87,16 @@ Consumer实现了kafka作为消息消费者订阅消息的方法getSimpleConsume
         
 ### 5、celery
 
-```Task.py
-CeleryConfig.py```
+```
+Task.py
+CeleryConfig.py
+```
 
 ### 6、人脸识别调用方法
 
+
 #### face_recognition是什么
+
 
 `face_recognition基于python开发的人像识别库，其借助blib机器深度学习库实现人脸图像精准识别，识别率高达99.38%。`
 
@@ -182,41 +188,42 @@ CeleryConfig.py```
 
                 pil_image.show()```
 
-###### 如何识别仓老师的脸
 
-``` from cobra.aiface. FaceRecognition import FaceRecognition
+##### 如何识别仓老师的脸
+
+```
+    from cobra.aiface. FaceRecognition import FaceRecognition
     aiface = FaceRecognition()
     image,faceLocations = aiface.touchFace('images/canglaoshi.jpeg')
-    aiface.showFace(image, faceLocations)```
+    aiface.showFace(image, faceLocations)
+```
 
-touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
+    touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
 
 ![仓老师](http://www.pathcurve.cn/assets/uploads/files/1518572459349-timg.jpeg)
 ![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572481295-cangllaoshi_face.png)
 
-###### 如何标识人脸的五官
+##### 如何标识人脸的五官
 
 ```
       from cobra.aiface. FaceRecognition import FaceRecognition
       aiface = FaceRecognition()
       image,faceLocations = aiface.touchFace('images/chuanpu1.jpg')
       limage,landmarks = aiface.landmarksImage(image,faceLocations)
-      aiface.showFaceLandmarks(limage,landmarks)```
+      aiface.showFaceLandmarks(limage,landmarks)
+```
 
 ![川普](http://www.pathcurve.cn/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg)
 ![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572819357-chuanpu_face.png)
 
-川普的脸正标准啊，方方正正的整好做人脸识别～
+    川普的脸正标准啊，方方正正的整好做人脸识别～
 
-##### 如何对比两张脸是不是同一人
+#### 如何对比两张脸是不是同一人
 
 ```aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')```
 
-如果为同一人返回True
+    如果为同一人返回True
 
 [技术论坛](http://www.pathcurve.cn)
 
 
-    
-    
-    
