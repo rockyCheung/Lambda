@@ -1,7 +1,8 @@
 # Lambda
-meolu/walden · GitHub：Cobra
 
-Cobra是一个大数据实时处理，计算的项目。
+`Cobra`是一个大数据实时处理，计算的项目。
+
+
 测试数据来源 http://archive.ics.uci.edu/ml/index.php
 ## 主要的功能模块：
 ###1、批量数据迁移
@@ -98,7 +99,23 @@ CeleryConfig.py
 #### face_recognition是什么
 
 
-`face_recognition基于python开发的人像识别库，其借助blib机器深度学习库实现人脸图像精准识别，识别率高达99.38%。`
+`face_recognition`基于python开发的人像识别库，其借助blib机器深度学习库实现人脸图像精准识别，识别率高达`99.38%`。
+
+#### face_recognition的安装
+简单来讲三条指令
+```
+$pip3 install face_recognition
+Invoking CMake setup: 'cmake /private/var/folders/hz/3hynp9h1479bq_1lhz12nmcr0000gn/T/pip-build-5ozqnhbf/dlib/tools/python -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/private/var/folders/hz/3hynp9h1479bq_1lhz12nmcr0000gn/T/pip-build-5ozqnhbf/dlib/build/lib.macosx-10.12-x86_64-3.6 -DPYTHON_EXECUTABLE=/usr/local/opt/python3/bin/python3.6 -DCMAKE_BUILD_TYPE=Release'
+error: [Errno 2] No such file or directory: 'cmake'
+```
+报错了
+
+```
+$pip3 install cmake
+pip3 install face_recognition
+```
+
+#### FaceRecognition类
 
 ```
     # -*- coding:utf-8 -*-
@@ -190,7 +207,7 @@ CeleryConfig.py
 ```
 
 
-#### 如何识别仓老师的脸
+#### 如何识别`仓老师`的脸
 
 ```
     from cobra.aiface. FaceRecognition import FaceRecognition
@@ -199,14 +216,14 @@ CeleryConfig.py
     aiface.showFace(image, faceLocations)
 ```
 
-touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
+* touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
 
 
 ![仓老师](http://www.pathcurve.cn/assets/uploads/files/1518572459349-timg.jpeg)
 ![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572481295-cangllaoshi_face.png)
 
 
-#### 如何标识人脸的五官
+#### 如何标识人脸的`五官`
 
 
 ```
@@ -220,7 +237,7 @@ touchFace返回两个参数，第一个是图片的数字数组，第二个是�
 ![川普](http://www.pathcurve.cn/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg)
 ![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572819357-chuanpu_face.png)
 
-    川普的脸正标准啊，方方正正的整好做人脸识别～
+川普的脸正标准啊，方方正正的整好做人脸识别～
 
 
 #### 如何对比两张脸是不是同一人
@@ -228,7 +245,7 @@ touchFace返回两个参数，第一个是图片的数字数组，第二个是�
 
 ```aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')```
 
-    如果为同一人返回True
+如果为同一人返回True
 
 [技术论坛](http://www.pathcurve.cn)
 

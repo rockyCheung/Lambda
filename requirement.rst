@@ -5,3 +5,6 @@ celery>=4.1.0
 crypto>=1.4.1
 pycrypto>=2.6.1
 face-recognition>=1.2.1
+six>=1.11.0
+dlib>=19.9.0
+tblib>=1.3.2
