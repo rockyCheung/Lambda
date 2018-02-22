@@ -5,8 +5,17 @@
 
 测试数据来源 http://archive.ics.uci.edu/ml/index.php
 ## 主要的功能模块：
-###1、批量数据迁移
-###2、实时数据处理、运算
+
+### 1、批量数据迁移
+### 2、实时数据处理、运算
+### 3、人脸识别工具包
+### 4、kafka客户端
+### 5、自然语言处理工具
+### 6、Spark文章关键词提取模型
+### 7、分布式任务管理队列
+### 8、HDFS客户端
+
+
 目前支持的迁移操作是从mongo迁移到HDFS。
    
 ## 项目结构：
@@ -47,12 +56,25 @@
 ## 用到主要技术：
 
 项目中用到了mongodb、hdfs、SparkSQL、SparkStream、SparkML、Celery
+Apache Parquet是Hadoop生态圈中一种新型列式存储格式，它可以兼容Hadoop生态圈中大多数计算框架(Hadoop、Spark等)，被多种查询引擎支持（Hive、Impala、Drill等），并且它是语言和平台无关的。
+Celery是一种分布式任务管理框架。
+Spark应该不用介绍～
     
 ## 工作原理：
 
-### 1、借助mongo客户端批量读取已经处理过的数据，然后通过hdfs客户端自动根据collection名称创建文件，并将数据写入hdfs，同时生成读取check点，记入parquet。
+### 1、数据迁移设计思路
+
+借助mongo客户端批量读取已经处理过的数据，然后通过hdfs客户端自动根据collection名称创建文件，并将数据写入hdfs，同时生成读取check点，记入parquet。
     
-### 2、Apache Parquet是Hadoop生态圈中一种新型列式存储格式，它可以兼容Hadoop生态圈中大多数计算框架(Hadoop、Spark等)，被多种查询引擎支持（Hive、Impala、Drill等），并且它是语言和平台无关的。
+### 2、文章关键词提取分析模型
+
+整体设计思路比价简单，其工作原理简单来说分为三步——
+第一，剔除文章正文中的HTML标签，并将文本内容保存到mongo。
+第二，将文章从mongo读取出来，对文本内容进行分词处理，如果分词处理不理想，可以自己维护stopwords-zh与userdict。分词处理采用jieba工具包，起初想用Spark提供的Transformer Tokenizer进行处理，研究了一下发现不支持中文分词。
+第三，进行词性、词频分析，分析，分析过程采用三种模型——
+    * 简单采用NLTK工具包进行了词频统计
+    * 采用Spark Estimator IDF进行分析
+    * 采用逻辑归进行逼近分析，总体来讲这种思路不太灵，因为能难找到已经打了标签的训练样本
  
 ## 使用说明：
  

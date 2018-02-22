@@ -8,3 +8,4 @@ face-recognition>=1.2.1
 six>=1.11.0
 dlib>=19.9.0
 tblib>=1.3.2
+nltk>=3.2.5
