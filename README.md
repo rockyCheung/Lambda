@@ -120,8 +120,128 @@ Cobra是一个大数据实时处理，计算的项目。
         Consumer实现了kafka作为消息消费者订阅消息的方法getSimpleConsumer(topicName,group)、getBalanceConsumer(topicName,group)
         
     5、celery
+    
        Task.py
        CeleryConfig.py
+       
+     6、人脸识别调用方法
+     
+     # face_recognition是什么
+  face_recognition基于python开发的人像识别库，其借助blib机器深度学习库实现人脸图像精准识别，识别率高达99.38%。
+      
+      # -*- coding:utf-8 -*-
+     import face_recognition
+     from cobra.conf.GlobalSettings import *
+    from PIL import Image,ImageDraw
+
+    class FaceRecognition(object):
+        def __init__(self):
+            self.aiface = face_recognition
+            self.root = ROOT_PATH
+
+        def loadImage(self,path):
+            return self.aiface.load_image_file(self.root+'/'+path)
+
+        def touchFaceImage(self,image):
+            face_locations = self.aiface.face_locations(img=image, model="cnn")
+            return image, face_locations
+
+        def touchFace(self,path):
+            image = self.loadImage(path)
+            return self.touchFaceImage(image)
+
+            def landmarksImage(self,image,faceLocations):
+                 return image,self.aiface.face_landmarks(face_image=image,face_locations=faceLocations)
+
+        def landmarks(self,path,faceLocations):
+            image = self.loadImage(path)
+            return self.landmarksImage(image,faceLocations)
+
+        def compareFaces(self,face,unknownFace):
+            image = self.loadImage(path=face)
+            imageArray, faceLocations = self.touchFaceImage(image=image)
+            imageEncoding = self.aiface.face_encodings(image,known_face_locations=faceLocations,num_jitters=1)[0]
+
+            unknown = self.loadImage(path=unknownFace)
+            unknownImageArray, unknownFaceLocations = self.touchFaceImage(image=unknown)
+            unknownEncoding = self.aiface.face_encodings(unknown,known_face_locations=unknownFaceLocations,num_jitters=1)[0]
+            results = self.aiface.compare_faces([imageEncoding], unknownEncoding)
+            if results[0] == True:
+                print("It's a picture of me!")
+            else:
+                print("It's not a picture of me!")
+            return results[0]
+
+        def showFace(self, image, faceLocations):
+            print("I found {} face(s) in this photograph.".format(len(faceLocations)))
+
+            for faceLocation in faceLocations:
+            # Print the location of each face in this image
+                top, right, bottom, left = faceLocation
+                print(
+                "A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom,
+                                                                                                      right))
+
+            # You can access the actual face itself like this:
+                faceImage = image[top:bottom, left:right]
+                pilImage = Image.fromarray(faceImage)
+                pilImage.show()
+        def showFaceLandmarks(self,image,faceLandmarksList):
+            print("I found {} face(s) in this photograph.".format(len(faceLandmarksList)))
+
+            for faceLandmarks in faceLandmarksList:
+
+            # Print the location of each facial feature in this image
+                facialFeatures = [
+                'chin',
+                'left_eyebrow',
+                'right_eyebrow',
+                'nose_bridge',
+                'nose_tip',
+                'left_eye',
+                'right_eye',
+                'top_lip',
+                'bottom_lip'
+                ]
+
+                for facialFeature in facialFeatures:
+                print("The {} in this face has the following points: {}".format(facialFeature,
+                                                                                 faceLandmarks[facialFeature]))
+            # Let's trace out each facial feature in the image with a line!
+                pil_image = Image.fromarray(image)
+                d = ImageDraw.Draw(pil_image)
+
+                for facialFeature in facialFeatures:
+                    d.line(faceLandmarks[facialFeature],fill='red', width=3)
+
+                pil_image.show()
+# 如何识别仓老师的脸
+    from cobra.aiface. FaceRecognition import FaceRecognition
+    aiface = FaceRecognition()
+    image,faceLocations = aiface.touchFace('images/canglaoshi.jpeg')
+    aiface.showFace(image, faceLocations)
+touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
+![0_1518572459130_timg.jpeg](/assets/uploads/files/1518572459349-timg.jpeg) 
+运行结果——
+![0_1518572480650_cangllaoshi_face.png](/assets/uploads/files/1518572481295-cangllaoshi_face-resized.png) 
+# 如何标识人脸的五官
+      from cobra.aiface. FaceRecognition import FaceRecognition
+      aiface = FaceRecognition()
+      image,faceLocations = aiface.touchFace('images/chuanpu1.jpg')
+      limage,landmarks = aiface.landmarksImage(image,faceLocations)
+      aiface.showFaceLandmarks(limage,landmarks)
+![0_1518572542400_7a4ed78e28d2aaddf32205c6c38ae33d.jpg](/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg) 
+运行结果——
+![0_1518572818311_chuanpu_face.png](/assets/uploads/files/1518572819357-chuanpu_face-resized.png) 
+川普的脸正标准啊，方方正正的整好做人脸识别～
+# 如何对比两张脸是不是同一人  
+            aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')
+如果为同一人返回True
+
+### 想要看更多关于人工智能的代码示例，可访问如下地址自行下载～
+https://github.com/rockyCheung/Lambda.git
+### 欢迎打赏，多了不要，只要一元
+![0_1518576768151_文乞.png](/assets/uploads/files/1518576768411-文乞.png)
 
 
     
