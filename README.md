@@ -55,25 +55,29 @@ Cobra是一个大数据实时处理，计算的项目。
  
 ### 1、GlobalSettings为全局属性定义类，包括Mongo、HDFS、KAFKA、Zookeeper等相关的配置。
 
-```from cobra.conf.GlobalSettings import *
-para = KAFKA_ZOO_CONFIG['hosts']```
+```
+from cobra.conf.GlobalSettings import *
+para = KAFKA_ZOO_CONFIG['hosts']
+```
 
-    
 ### 2、Logger为日志类
 
-```from cobra.log.Logger import Logger
+```
+from cobra.log.Logger import Logger
 logger = Logger().getLogger('DataMigrate')
-logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)```
+logger.info( "#"+"workPath: %s,collectionNames: %s,append str: %s",workPath,name,tempStr)
+```
     
 ### 3、MongodbClient为Mongo客户端
 
-```client = MongodbClient('192.168.1.178',27017)
+```
+client = MongodbClient('192.168.1.178',27017)
 db = client.getConnection('house_orignal')
 collectionNames  = db.collection_names()
 dataSet = db.ABC_sale
 cursor1 = dataSet.find().skip(1)
-cursor1.add_option(16)```
-
+cursor1.add_option(16)
+```
 ### 4、kafka服务提供者和消费者
 
 Producer实现了kafka向消息生产者发送信息的方法sendMsg(topicName,message)
@@ -90,7 +94,8 @@ CeleryConfig.py```
 
 `face_recognition基于python开发的人像识别库，其借助blib机器深度学习库实现人脸图像精准识别，识别率高达99.38%。`
 
-```# -*- coding:utf-8 -*-
+```
+    # -*- coding:utf-8 -*-
     import face_recognition
     from cobra.conf.GlobalSettings import *
     from PIL import Image,ImageDraw
@@ -191,7 +196,8 @@ touchFace返回两个参数，第一个是图片的数字数组，第二个是�
 
 ###### 如何标识人脸的五官
 
-```from cobra.aiface. FaceRecognition import FaceRecognition
+```
+      from cobra.aiface. FaceRecognition import FaceRecognition
       aiface = FaceRecognition()
       image,faceLocations = aiface.touchFace('images/chuanpu1.jpg')
       limage,landmarks = aiface.landmarksImage(image,faceLocations)
