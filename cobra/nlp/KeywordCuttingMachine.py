@@ -4,6 +4,7 @@ import jieba.posseg as pseg
 import re
 import sys
 from cobra.conf.GlobalSettings import *
+import nltk
 #jieba 分词可以将我们的自定义词典导入，格式 “词” “词性” “词频”
 jieba.load_userdict(JIEBA_USER_DICT)
 
@@ -41,7 +42,7 @@ class KeywordCuttingMachine(object):
     # 去除内容的空格、标点、数字、特色字符,进行分词，并去除停用词
     ###################################################################################################
     def wordsCutting(self, sentenceData):
-        wordlist = list(jieba.cut(sentenceData))  # jieba.cut  把字符串切割成词并添加至一个列表
+        wordlist = list(jieba.lcut(sentenceData))  # jieba.cut  把字符串切割成词并添加至一个列表
         wordlistN = []
         chineseStopwords = self.chineseStopwords()
         for word in wordlist:
@@ -77,7 +78,7 @@ class KeywordCuttingMachine(object):
         return resultList
 
     ###################################################################################################
-    #
+    # 分词处理
     ###################################################################################################
     def doCutting(self,content):
         # Apage = open(self.filename, 'r+', 'utf-8')
@@ -87,6 +88,7 @@ class KeywordCuttingMachine(object):
         resultList = self.wordsCutting(tempString)  # 对挑选后的文章进行分词
         # Apage.close()
         return resultList
+
 
 # ss = KeywordCuttingMachine()
 # sentenceData = ss.deleSpecialChar('在使用这个语料库之前，我们首先要检查一下是否已经安装了这个语料库。')

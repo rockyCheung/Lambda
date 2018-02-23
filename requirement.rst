@@ -9,3 +9,7 @@ six>=1.11.0
 dlib>=19.9.0
 tblib>=1.3.2
 nltk>=3.2.5
+textblob>=0.15.1
+pyttsx3>=2.7
+pyobjc>=2.4
+PyAudio>=0.2.11

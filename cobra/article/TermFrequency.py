@@ -15,6 +15,7 @@ import time
 import bson
 from pyspark.ml.clustering import KMeans
 from nltk.corpus import treebank
+import nltk
 
 class TermFrequency:
     def __init__(self,appName,masterName):
@@ -169,8 +170,10 @@ class TermFrequency:
         keywordsJson = eval(keywordsJson)
         # keywords = eval(str(keywordsJson).encode(encoding='utf-8')).keywords
         # print keywordsJson['keywords']
+        # text = nltk.text.Text(keywordsJson)
         fdist = FreqDist(keywordsJson['keywords'])
-        fdist.plot(30,cumulative = True)
+        # fdist.plot(30,cumulative = True)
+        # text.dispersion_plot(fdist)
         Sum = len(keywordsJson['keywords'])
         for (s, n) in self.cuttingMachine.sortItem(fdist.items()):
             frequencyDict = {}

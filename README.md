@@ -246,9 +246,8 @@ pip3 install face_recognition
 
 * touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
 
-
-![仓老师](http://www.pathcurve.cn/assets/uploads/files/1518572459349-timg.jpeg)
-![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572481295-cangllaoshi_face.png)
+<img src="http://www.pathcurve.cn/assets/uploads/files/1518572459349-timg.jpeg" height="200" align="left">
+<img src="http://www.pathcurve.cn/assets/uploads/files/1518572481295-cangllaoshi_face.png" height="200" align="right">
 
 
 #### 如何标识人脸的`五官`
@@ -261,9 +260,9 @@ pip3 install face_recognition
       limage,landmarks = aiface.landmarksImage(image,faceLocations)
       aiface.showFaceLandmarks(limage,landmarks)
 ```
+<img src="http://www.pathcurve.cn/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg" height="200" align="left">
+<img src="http://www.pathcurve.cn/assets/uploads/files/1518572819357-chuanpu_face.png" height="200" align="right">
 
-![川普](http://www.pathcurve.cn/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg)
-![运行结果](http://www.pathcurve.cn/assets/uploads/files/1518572819357-chuanpu_face.png)
 
 川普的脸正标准啊，方方正正的整好做人脸识别～
 
@@ -274,6 +273,15 @@ pip3 install face_recognition
 ```aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpg')```
 
 如果为同一人返回True
+
+### 7、语义分析与识别
+
+```
+speaker = Speaker()
+print speaker.translate(u'我是谁','zh-CN','en')
+
+```
+代码再优雅，都必须符合国情。这段段码要想正常运行前提是你的电脑能访问google。
 
 [技术论坛](http://www.pathcurve.cn)
 
