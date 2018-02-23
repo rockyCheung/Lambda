@@ -281,7 +281,7 @@ speaker = Speaker()
 print speaker.translate(u'我是谁','zh-CN','en')
 
 ```
-代码再优雅，都必须符合国情。这段段码要想正常运行前提是你的电脑能访问google。
+代码再优雅，都必须符合国情。这段码要想正常运行前提是你的电脑能访问google。
 
 [技术论坛](http://www.pathcurve.cn)
 
