@@ -119,10 +119,10 @@ class Speaker(object):
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-speaker = Speaker()
+# speaker = Speaker()
 # print speaker.translate(u'我是谁','zh-CN','en')
 # speaker.read(u"我是谁")
-speaker.listenMicrophone()
+# speaker.listenMicrophone()
 # r = sr.Recognizer()
 # m = sr.Microphone()
 # with m as source:
