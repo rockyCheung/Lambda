@@ -132,15 +132,15 @@ CeleryConfig.py
 #### face_recognition的安装
 简单来讲三条指令
 ```
-$pip3 install face_recognition
+$ pip3 install face_recognition
 Invoking CMake setup: 'cmake /private/var/folders/hz/3hynp9h1479bq_1lhz12nmcr0000gn/T/pip-build-5ozqnhbf/dlib/tools/python -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/private/var/folders/hz/3hynp9h1479bq_1lhz12nmcr0000gn/T/pip-build-5ozqnhbf/dlib/build/lib.macosx-10.12-x86_64-3.6 -DPYTHON_EXECUTABLE=/usr/local/opt/python3/bin/python3.6 -DCMAKE_BUILD_TYPE=Release'
 error: [Errno 2] No such file or directory: 'cmake'
 ```
-报错了
+如果没有安装cmake，会报找不到cmake，需要先安装cmake
 
 ```
-$pip3 install cmake
-pip3 install face_recognition
+$ pip3 install cmake
+$ pip3 install face_recognition
 ```
 
 #### FaceRecognition类
@@ -246,7 +246,7 @@ pip3 install face_recognition
 
 * touchFace返回两个参数，第一个是图片的数字数组，第二个是人脸所在位置，人脸所在位置[top, right, bottom, left]，人脸识别有两种模式，缺省为hot，基本识别模式，识别速度快，但准度低，cnn模式，识别速度慢，精度高，本文中采用都为cnn模式，因为hot模式根本就他娘的无法识别。
 
-<img src="http://www.pathcurve.cn/assets/uploads/files/1518572459349-timg.jpeg" height="200" align="center">
+<img src="http://www.pathcurve.cn/assets/uploads/files/1518572459349-timg.jpeg" height="200" align="right">
 <img src="http://www.pathcurve.cn/assets/uploads/files/1518572481295-cangllaoshi_face.png" height="200" align="right">
 
 
@@ -260,7 +260,7 @@ pip3 install face_recognition
       limage,landmarks = aiface.landmarksImage(image,faceLocations)
       aiface.showFaceLandmarks(limage,landmarks)
 ```
-<img src="http://www.pathcurve.cn/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg" height="200" align="center">
+<img src="http://www.pathcurve.cn/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg" height="200" align="right">
 <img src="http://www.pathcurve.cn/assets/uploads/files/1518572819357-chuanpu_face.png" height="200" align="right">
 
 

@@ -14,3 +14,4 @@ pyttsx3>=2.7
 pyobjc>=2.4
 PyAudio>=0.2.11
 pocketsphinx>=0.1.3
+SpeechRecognition>=3.8.1
