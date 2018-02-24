@@ -250,6 +250,7 @@ $ pip3 install face_recognition
 <img src="http://www.pathcurve.cn/assets/uploads/files/1518572481295-cangllaoshi_face.png" height="150" align="right">
 
 </br>
+
 #### 如何标识人脸的`五官`
 
 
@@ -265,6 +266,7 @@ $ pip3 install face_recognition
 <img src="http://www.pathcurve.cn/assets/uploads/files/1518572542642-7a4ed78e28d2aaddf32205c6c38ae33d.jpeg" height="150" align="right">
 <img src="http://www.pathcurve.cn/assets/uploads/files/1518572819357-chuanpu_face.png" height="150" align="right">
 </br>
+
 #### 如何对比两张脸是不是同一人
 
 
