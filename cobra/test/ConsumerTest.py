@@ -37,7 +37,7 @@ class TestgetSimpleConsumerMethods(unittest.TestCase):
                     except Exception:
                         print 'this msg contain can not analysis Object'
                     if len(msg) > 0:
-                        print 'bson:', bson.ObjectId(msg['_id'])
+                        # print 'bson:', bson.ObjectId(msg['_id'])
                         mongoClient.update(dataBaseName='lhhs', collectionName='article_text',
                                            updateFor={'_id': bson.ObjectId(msg['_id'])},
                                            setValue={'$set': {'status': 4}})

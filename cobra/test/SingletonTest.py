@@ -52,16 +52,16 @@ class MyClass(Singleton):
 #     print i
 #     print "#########################################"
 #############################################################################
-# client = Producer()
-# request = {}
-# request["name"] = "RockyCheung"
-# request["sex"] = "man"
-# request["age"] = 25
-# request["marry"] = 'Yes'
-# request["qq"] = '2211'
-# msg = json.dumps(request)
-# client.sendMsg(topicName='topic_test_1',message=msg)
-# print ("{} has been sent successfully~".format(msg))
+client = Producer()
+request = {}
+request["name"] = "RockyCheung"
+request["sex"] = "man"
+request["age"] = 25
+request["marry"] = 'Yes'
+request["qq"] = '2211'
+msg = json.dumps(request)
+client.sendMsg(topicName='topic_test_1',message=msg)
+print ("{} has been sent successfully~".format(msg))
 #############################################################################
 
 #######################################################################################################################################

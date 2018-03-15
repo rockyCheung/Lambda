@@ -86,9 +86,9 @@ class FaceRecognition(object):
             pil_image.show()
 
 aiface = FaceRecognition()
-# image,faceLocations = aiface.touchFace('images/chuanpu1.jpg')
-# limage,landmarks = aiface.landmarksImage(image,faceLocations)
+image,faceLocations = aiface.touchFace('images/chuanpu1.jpg')
+limage,landmarks = aiface.landmarksImage(image,faceLocations)
 # aiface.showFace(image, faceLocations)
-# aiface.showFaceLandmarks(limage,landmarks)
-print aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpeg')
+aiface.showFaceLandmarks(limage,landmarks)
+# print aiface.compareFaces(face='images/chuanpu1.jpg',unknownFace='images/chuanpu2.jpeg')
 # print faceLocations,landmarks
