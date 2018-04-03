@@ -15,3 +15,6 @@ pyobjc>=2.4
 PyAudio>=0.2.11
 pocketsphinx>=0.1.3
 SpeechRecognition>=3.8.1
+pydot>=1.2.4
+graphviz>=0.8.2
+ pyparsing>=2.1.4
